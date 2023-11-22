@@ -1,6 +1,13 @@
 module Main (main) where
 
-import Lib
+import Server
+import Servant
+import Network.Wai.Handler.Warp (run)
 
+-- | Entrypoint of the binary
 main :: IO ()
-main = someFunc
+main = run 8080 application
+
+-- | The Server Application
+application :: Application
+application = serve (Proxy :: Proxy API) server

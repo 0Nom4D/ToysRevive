@@ -1,17 +1,17 @@
 cabal-version: 2.2
 
--- This file has been generated from package.yaml by hpack version 0.35.1.
+-- This file has been generated from package.yaml by hpack version 0.35.2.
 --
 -- see: https://github.com/sol/hpack
 
 name:           ToysRevive-server
 version:        0.1.0.0
-description:    Please see the README on GitHub at <https://github.com/githubuser/ToysRevive-server#readme>
-homepage:       https://github.com/githubuser/ToysRevive-server#readme
-bug-reports:    https://github.com/githubuser/ToysRevive-server/issues
-author:         Author name here
-maintainer:     example@example.com
-copyright:      2023 Author name here
+description:    Please see the README on GitHub at <https://github.com/0Nom4D/ToysRevive#readme>
+homepage:       https://github.com/0Nom4D/ToysRevive#readme
+bug-reports:    https://github.com/0Nom4D/ToysRevive/issues
+author:         Arthur Jamet
+maintainer:     arthur.jamet@gmail.com
+copyright:      2023 Arthur Jamet
 license:        BSD-3-Clause
 license-file:   LICENSE
 build-type:     Simple
@@ -21,21 +21,28 @@ extra-source-files:
 
 source-repository head
   type: git
-  location: https://github.com/githubuser/ToysRevive-server
+  location: https://github.com/0Nom4D/ToysRevive
 
 library
   exposed-modules:
-      Lib
+      Server
   other-modules:
       Paths_ToysRevive_server
   autogen-modules:
       Paths_ToysRevive_server
   hs-source-dirs:
       src
+  default-extensions:
+      DataKinds
+      DeriveGeneric
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints
   build-depends:
-      base >=4.7 && <5
+      aeson
+    , base >=4.7 && <5
     , servant
+    , servant-server
+    , wai
+    , warp
   default-language: Haskell2010
 
 executable ToysRevive-server-exe
@@ -46,11 +53,18 @@ executable ToysRevive-server-exe
       Paths_ToysRevive_server
   hs-source-dirs:
       app
+  default-extensions:
+      DataKinds
+      DeriveGeneric
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       ToysRevive-server
+    , aeson
     , base >=4.7 && <5
     , servant
+    , servant-server
+    , wai
+    , warp
   default-language: Haskell2010
 
 test-suite ToysRevive-server-test
@@ -62,9 +76,16 @@ test-suite ToysRevive-server-test
       Paths_ToysRevive_server
   hs-source-dirs:
       test
+  default-extensions:
+      DataKinds
+      DeriveGeneric
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       ToysRevive-server
+    , aeson
     , base >=4.7 && <5
     , servant
+    , servant-server
+    , wai
+    , warp
   default-language: Haskell2010
