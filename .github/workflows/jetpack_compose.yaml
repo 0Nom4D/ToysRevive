@@ -1,0 +1,51 @@
+name: Kotlin Jetpack Compose Build
+
+on:
+  workflow_dispatch:
+  pull_request:
+  push:
+    paths:
+      - .github/workflows/jetpack_compose.yaml
+      - '**/main/java/nom4d/**/*.kt'
+      - '**.kts'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: 17
+          distribution: 'zulu'
+
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v2
+        with:
+          gradle-version: current
+
+      - name: Build debug
+        working-directory: mobile
+        run: ./gradlew assembleDebug --stacktrace
+
+      - name: Build release
+        working-directory: mobile
+        run: ./gradlew assembleRelease --stacktrace
+
+      - name: Run local tests
+        working-directory: mobile
+        run: ./gradlew test --stacktrace
+
+      - name: Upload build outputs (APKs)
+        uses: actions/upload-artifact@v3
+        with:
+          name: build-outputs
+          path: mobile/app/build/outputs
+
+      - name: Upload build reports
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: build-reports
+          path: mobile/app/build/reports
