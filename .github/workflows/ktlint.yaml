@@ -15,10 +15,9 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: ":floppy_disk: Install Ktlint"
+      - name: "Install Ktlint"
         uses: nbadal/action-ktlint-setup@v1
 
-      - name: ":rotating_light: Launching Ktlint"
-        run: |
-          cd mobile
-          ktlint
+      - name: "Launching Ktlint"
+        working-directory: mobile
+        run: ktlint
