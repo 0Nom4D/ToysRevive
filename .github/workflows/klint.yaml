@@ -1,0 +1,24 @@
+name: Kotlin Linter
+
+on:
+  workflow_dispatch:
+  pull_request:
+  push:
+    paths:
+      - .github/workflows/ktlint.yaml
+      - '**/main/java/nom4d/**/*.kt'
+      - '**.kts'
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: ":floppy_disk: Install Ktlint"
+        uses: nbadal/action-ktlint-setup@v1
+
+      - name: ":rotating_light: Launching Ktlint"
+        run: |
+          cd mobile
+          ktlint
