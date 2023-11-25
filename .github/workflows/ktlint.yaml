@@ -5,6 +5,7 @@ on:
   pull_request:
   push:
     paths:
+      - .github/workflows/jetpack_compose.yaml
       - .github/workflows/ktlint.yaml
       - '**/main/java/nom4d/**/*.kt'
       - '**.kts'
