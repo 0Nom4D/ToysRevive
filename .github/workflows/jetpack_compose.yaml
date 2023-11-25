@@ -9,15 +9,22 @@ on:
       - .github/workflows/ktlint.yaml
       - '**/main/java/nom4d/**/*.kt'
       - '**.kts'
-  workflow_run:
-    workflows: [Kotlin Linter]
-    types:
-      - completed
 
 jobs:
+  Lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: "Install Ktlint"
+        uses: nbadal/action-ktlint-setup@v1
+
+      - name: "Launching Ktlint"
+        working-directory: mobile
+        run: ktlint
   Build:
     runs-on: ubuntu-latest
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    needs: [ Lint ]
     steps:
       - uses: actions/checkout@v4
       - name: Set up JDK 17
@@ -46,8 +53,7 @@ jobs:
           path: mobile/app/build/outputs
   Test:
     runs-on: ubuntu-latest
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
-    needs: [ Build ]
+    needs: [ Lint ]
     steps:
       - uses: actions/checkout@v4
       - name: Set up JDK 17
