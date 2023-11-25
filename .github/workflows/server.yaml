@@ -52,15 +52,16 @@ jobs:
       - uses: ./.github/actions/cache
       - name: Setup Robot
         run: pip install -r robot/requirements.txt
+      - name: Compile Project
+        run: stack build
       - name: Run Tests
         # TODO: Later on, we will need to setup a database, using a docker-compose
-        run: (stack run &) ; sleep 10 ; robot -d test-out robot/ ; pkill stack
+        run: (stack run &) ; sleep 10 ; robot -d test-out robot/
       - uses: actions/upload-artifact@v3
         if: always()
         with:
           name: results
           path: test-out
-      # Source: 
       - name: Write results to Pull Request and Summary
         if: always() && github.event_name == 'pull_request'
         uses: joonvena/robotframework-reporter-action@v2.1
