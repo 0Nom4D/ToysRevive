@@ -9,6 +9,7 @@ on:
 
 defaults:
   run:
+    shell: bash
     working-directory: ./server
 
 jobs:
@@ -53,7 +54,7 @@ jobs:
         run: pip install -r robot/requirements.txt
       - name: Run Tests
         # TODO: Later on, we will need to setup a database, using a docker-compose
-        run: stack run & ; robot -d test-out robot/ ; pkill stack
+        run: (stack run &) ; sleep 10 ; robot -d test-out robot/ ; pkill stack
       - uses: actions/upload-artifact@v3
         if: always()
         with:
