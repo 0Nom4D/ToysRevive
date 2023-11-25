@@ -44,6 +44,9 @@ ghc-options:
 
 library:
   source-dirs: src
+  exposed-modules:
+  - Server
+  - API.ServerMessage
 
 executables:
   ToysRevive-server-exe:
@@ -66,3 +69,6 @@ tests:
     - -with-rtsopts=-N
     dependencies:
     - ToysRevive-server
+    - HUnit
+    - test-framework
+    - test-framework-hunit

@@ -1,2 +1,8 @@
+import Test.Framework (defaultMain)
+import TestServer
+
 main :: IO ()
-main = putStrLn "Test suite not yet implemented"
+main = do
+    defaultMain [ 
+        TestServer.testSuite
+        ]
