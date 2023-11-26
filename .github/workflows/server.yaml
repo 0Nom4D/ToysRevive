@@ -17,7 +17,9 @@ jobs:
     steps:
       - uses: actions/checkout@v2.3.4
       - uses: ./.github/actions/install-stack
-      - uses: ./.github/actions/cache
+      - uses: freckle/stack-cache-action@v2
+        with:
+          working-directory: server
       - name: Compile Project
         run: stack build
   Lint:
@@ -25,7 +27,9 @@ jobs:
     needs: [ Build ]
     steps:
       - uses: actions/checkout@v2.3.4
-      - uses: ./.github/actions/cache
+      - uses: freckle/stack-cache-action@v2
+        with:
+          working-directory: server
       - name: Setup HLint
         run: stack install hlint
       - name: Run HLint
@@ -36,7 +40,9 @@ jobs:
     needs: [ Build ]
     steps:
       - uses: actions/checkout@v2.3.4
-      - uses: ./.github/actions/cache
+      - uses: freckle/stack-cache-action@v2
+        with:
+          working-directory: server
       - name: Install Coverage utility
         run: stack install hpc-codecov
       - name: Run unit tests
@@ -48,7 +54,9 @@ jobs:
     needs: [ Build ]
     steps:
       - uses: actions/checkout@v2.3.4
-      - uses: ./.github/actions/cache
+      - uses: freckle/stack-cache-action@v2
+        with:
+          working-directory: server
       - name: Setup Robot
         run: pip install -r robot/requirements.txt
       - name: Compile Project
