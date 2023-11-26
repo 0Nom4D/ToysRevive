@@ -30,10 +30,8 @@ jobs:
       - uses: freckle/stack-cache-action@v2
         with:
           working-directory: server
-      - name: Setup HLint
-        run: stack install hlint
-      - name: Run HLint
-        run: hlint src app
+      - name: Setup & Run HLint
+        run: curl -sSL https://raw.github.com/ndmitchell/hlint/master/misc/run.sh | sh -s src app
   UTests:
     name: Unit Tests
     runs-on: ubuntu-latest
