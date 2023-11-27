@@ -45,7 +45,16 @@ jobs:
         run: stack install hpc-codecov
       - name: Run unit tests
         run: stack test --coverage
-      # TODO: Report Coverage
+      - name: Process Coverage report
+        run: hpc-codecov stack:all -o codecov.json
+      - name: Upload coverage reports to Codecov
+        if: ${{ always() }}
+        uses: codecov/codecov-action@v3
+        with:
+          files: ./server/codecov.json
+          flags: server
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
   RTests:
     name: Robot Tests
     runs-on: ubuntu-latest
