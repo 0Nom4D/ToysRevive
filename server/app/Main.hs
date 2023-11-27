@@ -1,8 +1,8 @@
 module Main (main) where
 
-import Server
-import Servant
 import Network.Wai.Handler.Warp (run)
+import Servant
+import Server
 
 -- | Entrypoint of the binary
 main :: IO ()

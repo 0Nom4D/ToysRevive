@@ -8,4 +8,3 @@ type API = API.ServerMessage.API
 -- | The Controllers for the multiple routes
 server :: Server API
 server = API.ServerMessage.endpoints
--- | :<|>

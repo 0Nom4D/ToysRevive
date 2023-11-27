@@ -3,6 +3,6 @@ import TestServer
 
 main :: IO ()
 main = do
-    defaultMain [ 
-        TestServer.testSuite
+    defaultMain
+        [ TestServer.testSuite
         ]
