@@ -76,3 +76,17 @@ jobs:
         with:
           name: build-reports
           path: mobile/app/build/reports
+  Static_Analysis:
+    runs-on: ubuntu-latest
+    needs: [ Lint, Build ]
+    steps:
+      - name: Launch Detekt
+        uses: natiginfo/action-detekt-all@1.23.3
+        with:
+          args: -c detekt.yml -r xml:mobile/app/build/reports/analysis.xml
+      - name: Upload analysis reports
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: static_analysis
+          path: mobile/app/build/reports/analysis.xml
