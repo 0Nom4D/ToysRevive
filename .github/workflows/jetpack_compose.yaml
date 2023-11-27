@@ -50,6 +50,13 @@ jobs:
         with:
           name: build-outputs
           path: mobile/app/build/outputs
+
+      - name: Upload build reports
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: build-reports
+          path: mobile/app/build/reports
   Test:
     runs-on: ubuntu-latest
     needs: [ Lint ]
@@ -70,12 +77,16 @@ jobs:
         working-directory: mobile
         run: ./gradlew test --stacktrace
 
-      - name: Upload build reports
-        if: always()
-        uses: actions/upload-artifact@v3
+      - name: Kover Coverage Generation
+        working-directory: mobile
+        run: ./gradlew koverXmlReport
+
+      - name: Upload Code Coverage to Codecov
+        uses: codecov/codecov-action@v3.1.4
         with:
-          name: build-reports
-          path: mobile/app/build/reports
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./mobile/build/reports/kover/report.xml
+          flags: mobile
   Detekt:
     runs-on: ubuntu-latest
     needs: [ Lint, Build ]
