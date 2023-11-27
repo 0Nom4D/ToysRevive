@@ -33,6 +33,7 @@ jobs:
       - name: Setup & Run HLint
         run: curl -sSL https://raw.github.com/ndmitchell/hlint/master/misc/run.sh | sh -s src app
   Fourmolu:
+    name: Code Format
     runs-on: ubuntu-latest
     needs: [ Build ]
     steps:
