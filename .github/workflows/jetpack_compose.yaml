@@ -1,4 +1,4 @@
-name: Kotlin Jetpack Compose Build
+name: Kotlin Jetpack Compose
 
 on:
   workflow_dispatch:
