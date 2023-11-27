@@ -5,7 +5,7 @@ on:
   push:
     paths:
       - .github/workflows/jetpack_compose.yaml
-      - .github/workflows/ktlint.yaml
+      - '**/detekt.yml'
       - '**/main/java/nom4d/**/*.kt'
       - '**.kts'
 
