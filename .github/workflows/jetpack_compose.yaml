@@ -83,7 +83,7 @@ jobs:
       - name: Launch Detekt
         uses: natiginfo/action-detekt-all@1.23.3
         with:
-          args: -c detekt.yml -r xml:mobile/app/build/reports/analysis.xml
+          args: -c mobile/detekt.yml -r xml:mobile/app/build/reports/analysis.xml
       - name: Upload analysis reports
         if: always()
         uses: actions/upload-artifact@v3
