@@ -80,15 +80,11 @@ jobs:
     runs-on: ubuntu-latest
     needs: [ Lint, Build ]
     steps:
-      - name: Download detekt
-        working-directory: mobile
-        run: |
-          curl -sSLO https://github.com/detekt/detekt/releases/download/v1.23.4/detekt-cli-1.23.4.zip
-          unzip detekt-cli-1.23.4.zip
-          ./detekt-cli-1.23.4/bin/detekt-cli --help
-      - name: Launch detekt
-        working-directory: mobile
-        run: ./detekt-cli-1.23.4/bin/detekt-cli --config ./detekt.yml -r xml:app/build/reports/analysis.xml
+      - uses: actions/checkout@v4
+      - name: Launch Detekt
+        uses: natiginfo/action-detekt-all@1.23.3
+        with:
+          args: --config ./mobile/detekt.yml -r xml:mobile/app/build/reports/analysis.xml
       - name: Upload analysis reports
         if: always()
         uses: actions/upload-artifact@v3
