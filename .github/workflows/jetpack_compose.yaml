@@ -5,9 +5,9 @@ on:
   push:
     paths:
       - .github/workflows/jetpack_compose.yaml
-      - '**/detekt.yml'
-      - '**/main/java/nom4d/**/*.kt'
-      - '**.kts'
+      - 'mobile/**/detekt.yml'
+      - 'mobile/**/main/java/nom4d/**/*.kt'
+      - 'mobile/**.kts'
 
 jobs:
   Lint:
@@ -33,7 +33,7 @@ jobs:
           distribution: 'zulu'
 
       - name: Setup Gradle
-        uses: gradle/gradle-build-action@v2
+        uses: gradle/gradle-build-action@v2.4.2
         with:
           gradle-version: current
 
@@ -69,7 +69,7 @@ jobs:
           distribution: 'zulu'
 
       - name: Setup Gradle
-        uses: gradle/gradle-build-action@v2
+        uses: gradle/gradle-build-action@v2.4.2
         with:
           gradle-version: current
 
