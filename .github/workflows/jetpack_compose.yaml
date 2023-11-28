@@ -5,9 +5,9 @@ on:
   push:
     paths:
       - .github/workflows/jetpack_compose.yaml
-      - '**/detekt.yml'
-      - '**/main/java/nom4d/**/*.kt'
-      - '**.kts'
+      - 'mobile/**/detekt.yml'
+      - 'mobile/**/main/java/nom4d/**/*.kt'
+      - 'mobile/**.kts'
 
 jobs:
   Lint:
