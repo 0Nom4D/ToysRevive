@@ -1,0 +1,92 @@
+name: Server
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - .github/workflows/server.yaml
+      - 'server/**'
+
+defaults:
+  run:
+    shell: bash
+    working-directory: ./server
+
+jobs:
+  Build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/install-stack
+      - uses: freckle/stack-cache-action@v2
+        with:
+          working-directory: server
+      - name: Compile Project
+        run: stack build
+  Lint:
+    runs-on: ubuntu-latest
+    needs: [ Build ]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: freckle/stack-cache-action@v2
+        with:
+          working-directory: server
+      - name: Setup & Run HLint
+        run: curl -sSL https://raw.github.com/ndmitchell/hlint/master/misc/run.sh | sh -s src app
+  Fourmolu:
+    name: Code Format
+    runs-on: ubuntu-latest
+    needs: [ Build ]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: haskell-actions/run-fourmolu@v9
+        with:
+          version: "0.14.1.0"
+          pattern: server/**/*.hs
+  UTests:
+    name: Unit Tests
+    runs-on: ubuntu-latest
+    needs: [ Build ]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: freckle/stack-cache-action@v2
+        with:
+          working-directory: server
+      - name: Install Coverage utility
+        run: stack install hpc-codecov
+      - name: Run unit tests
+        run: stack test --coverage
+      - name: Process Coverage report
+        run: hpc-codecov stack:all -o codecov.json
+      - name: Upload coverage reports to Codecov
+        if: ${{ always() }}
+        uses: codecov/codecov-action@v3
+        with:
+          files: ./server/codecov.json
+          flags: server
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+  RTests:
+    name: Robot Tests
+    runs-on: ubuntu-latest
+    needs: [ Build ]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: freckle/stack-cache-action@v2
+        with:
+          working-directory: server
+      - name: Setup Robot
+        run: pip install -r robot/requirements.txt
+      - name: Compile Project
+        run: stack build
+      - name: Run Tests
+        # TODO: Later on, we will need to setup a database, using a docker-compose
+        run: (stack run &) ; sleep 10 ; robot -d test-out robot/
+      - name: Write results to Pull Request and Summary
+        if: always()
+        uses: joonvena/robotframework-reporter-action@v2.1
+        with:
+          report_path: server/test-out/
+          gh_access_token: ${{ secrets.GITHUB_TOKEN }}
+          # True if not triggered by a PR
+          only_summary: ${{ github.event_name != 'pull_request' }}
+

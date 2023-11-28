@@ -1,0 +1,14 @@
+# Stack-related
+.stack-work/
+
+# Temporary files
+*~
+
+# Compiled files
+*.o
+
+# Robot tests output
+log.html
+output.xml
+report.html
+env
