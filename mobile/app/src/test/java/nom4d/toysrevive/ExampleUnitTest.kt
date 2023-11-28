@@ -1,4 +1,4 @@
-package nom4d.myapplication
+package nom4d.toysrevive
 
 import org.junit.Assert.*
 import org.junit.Test

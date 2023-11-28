@@ -1,4 +1,4 @@
-package nom4d.myapplication.ui.theme
+package nom4d.toysrevive.ui.theme
 
 import android.app.Activity
 import android.os.Build

@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace = "nom4d.myapplication"
+    namespace = "nom4d.toysrevive"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "nom4d.myapplication"
+        applicationId = "nom4d.toysrevive"
         minSdk = 24
         targetSdk = 34
         versionCode = 1

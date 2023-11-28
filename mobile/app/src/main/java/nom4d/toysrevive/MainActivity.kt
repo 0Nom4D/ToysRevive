@@ -1,4 +1,4 @@
-package nom4d.myapplication
+package nom4d.toysrevive
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -10,7 +10,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import nom4d.myapplication.ui.theme.ToysReviveTheme
+import nom4d.toysrevive.ui.theme.ToysReviveTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
