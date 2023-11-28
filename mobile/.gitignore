@@ -1,0 +1,87 @@
+# MacOS System Files
+.DS_Store
+
+# IntelliJ IDEA project files
+*.iml
+.idea/
+.idea/libraries
+.idea/gradle.xml
+.idea/compiler.xml
+.idea/inspectionProfiles/profiles_settings.xml
+.idea/.name
+.idea/jarRepositories.xml
+.idea/csv-plugin.xml
+.idea/libraries-with-intellij-classes.xml
+.idea/misc.xml
+.idea/protoeditor.xml
+
+# CLion IDE, IntelliJ IDEA IDE, Android Studio project files
+/ideaSDK
+/clionSDK
+/android-studio/sdk
+
+# Build and output directory
+/dist
+build/
+out/
+
+# Temporary files and directories
+/tmp
+buildSrcTmp/
+distTmp/
+outTmp/
+
+# Gradle related files
+.gradle/
+.idea/libraries/Gradle*.xml
+.idea/libraries/Maven*.xml
+.idea/modules
+.idea/modules.xml
+
+# IntelliJ artifacts and test data
+.idea/artifacts
+!**/testData/**/*.iml
+.idea/remote-targets.xml
+
+# Generated files for JPS
+.idea/runConfigurations/JPS_*.xml
+.idea/runConfigurations/_JPS_*.xml
+.idea/runConfigurations/PILL_*.xml
+.idea/runConfigurations/_FP_*.xml
+.idea/runConfigurations/_MT_*.xml
+
+# Backup files
+*.versionsBackup
+
+# Generated build files
+!**/src/**/build
+!**/test/**/build
+
+# Kotlin-specific files and directories
+node_modules/
+.rpt2_cache/
+libraries/tools/kotlin-test-js-runner/lib/
+local.properties
+kotlin-ide/
+.kotlin/
+
+# Kotlin/Native files
+/kotlin-native/dist
+
+# files related to Confluence and other specific tools
+/confluence/target
+/dependencies/repo
+/android.tests.dependencies
+/dependencies/android.tests.dependencies
+/ideaSDK
+/gh-pages
+/local
+
+# JavaScript translator test data
+/js/js.translator/testData/out/
+/js/js.translator/testData/out-min/
+/js/js.translator/testData/out-pir/
+
+# test data for JPS plugin
+/idea/testData/debugger/tinyApp/classes*
+/jps-plugin/testData/kannotator
