@@ -1,8 +1,11 @@
 module API.ServerMessage (API, endpoints, ServerMessage (ServerMessage), messageEndpoint) where
 
-import Data.Aeson (ToJSON)
+import Control.Lens
+import Data.Aeson (ToJSON, toJSON)
+import Data.Swagger
 import GHC.Generics (Generic)
 import Servant
+import Servant.Swagger
 
 -- | The Routes of the API
 type API = Get '[JSON] ServerMessage
@@ -22,3 +25,10 @@ data ServerMessage = ServerMessage
 
 -- | We need to be able to convert the data into JSON
 instance ToJSON ServerMessage
+
+-- | Everything to make our type compatible with Swagger
+instance ToSchema ServerMessage where
+    declareNamedSchema proxy =
+        genericDeclareNamedSchema defaultSchemaOptions proxy
+            & mapped . schema . description ?~ "A Simple Message from the server"
+            & mapped . schema . example ?~ toJSON (ServerMessage "Hello World")

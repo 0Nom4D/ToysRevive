@@ -10,4 +10,4 @@ main = run 8080 application
 
 -- | The Server Application
 application :: Application
-application = serve (Proxy :: Proxy API) server
+application = serve (Proxy :: Proxy APIWithSwagger) server
