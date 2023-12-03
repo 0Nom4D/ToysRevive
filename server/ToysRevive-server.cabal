@@ -45,6 +45,7 @@ library
     , servant
     , servant-server
     , servant-swagger
+    , servant-swagger-ui
     , swagger2
     , text
     , wai
@@ -73,6 +74,7 @@ executable ToysRevive-server-exe
     , servant
     , servant-server
     , servant-swagger
+    , servant-swagger-ui
     , swagger2
     , text
     , wai
@@ -104,6 +106,7 @@ test-suite ToysRevive-server-test
     , servant
     , servant-server
     , servant-swagger
+    , servant-swagger-ui
     , swagger2
     , test-framework
     , test-framework-hunit

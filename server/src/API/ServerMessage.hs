@@ -5,7 +5,6 @@ import Data.Aeson (ToJSON, toJSON)
 import Data.Swagger
 import GHC.Generics (Generic)
 import Servant
-import Servant.Swagger
 
 -- | The Routes of the API
 type API = Get '[JSON] ServerMessage

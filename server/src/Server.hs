@@ -5,19 +5,17 @@ import Control.Lens
 import Data.Swagger
 import Servant
 import Servant.Swagger
+import Servant.Swagger.UI
 
 type API = API.ServerMessage.API
 
-type APIWithSwagger = SwaggerAPI :<|> API
+type APIWithSwagger = SwaggerSchemaUI "swagger" "swagger.json" :<|> API
 
 -- | The Controllers for the multiple routes
 server :: Server APIWithSwagger
-server = return appSwagger :<|> API.ServerMessage.endpoints
+server = swaggerSchemaUIServer appSwagger :<|> API.ServerMessage.endpoints
 
 -- | Swagger Related
-
--- | API for serving @swagger.json@.
-type SwaggerAPI = "swagger.json" :> Get '[JSON] Swagger
 
 -- | Swagger spec for our API.
 appSwagger :: Swagger
