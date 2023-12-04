@@ -44,9 +44,8 @@ private val lightColorScheme = lightColorScheme(
     inversePrimary = mdThemeLightInversePrimary,
     surfaceTint = mdThemeLightSurfaceTint,
     outlineVariant = mdThemeLightOutlineVariant,
-    scrim = mdThemeLightScrim,
+    scrim = mdThemeLightScrim
 )
-
 
 private val darkColorScheme = darkColorScheme(
     primary = mdThemeDarkPrimary,
@@ -77,7 +76,7 @@ private val darkColorScheme = darkColorScheme(
     inversePrimary = mdThemeDarkInversePrimary,
     surfaceTint = mdThemeDarkSurfaceTint,
     outlineVariant = mdThemeDarkOutlineVariant,
-    scrim = mdThemeDarkScrim,
+    scrim = mdThemeDarkScrim
 )
 
 @Composable
