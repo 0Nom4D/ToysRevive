@@ -15,7 +15,10 @@ jobs:
   Build:
     runs-on: ubuntu-latest
     steps:
+      # Needed for Swagger UI
       - uses: actions/checkout@v4
+      - name: Install needed packages
+        run: sudo apt-get install -y pkg-config
       - uses: ./.github/actions/install-stack
       - uses: freckle/stack-cache-action@v2
         with:
