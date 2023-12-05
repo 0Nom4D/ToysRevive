@@ -1,7 +1,9 @@
 package nom4d.toysrevive
 
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.compose.setContent
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 
 import androidx.biometric.BiometricManager
@@ -45,10 +47,14 @@ import nom4d.toysrevive.navigation.BottomNavigationBar
 import nom4d.toysrevive.navigation.NavigationHost
 import nom4d.toysrevive.navigation.NavigationItem
 import nom4d.toysrevive.navigation.getRouteDisplayName
+import nom4d.toysrevive.settings.AppSettings
+import nom4d.toysrevive.settings.SettingsModal
+import nom4d.toysrevive.swipe.SwipeableCardDescriptionModal
 import nom4d.toysrevive.ui.theme.ToysReviveTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 class MainActivity : AppCompatActivity() {
+    @RequiresApi(Build.VERSION_CODES.R)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -70,13 +76,15 @@ class MainActivity : AppCompatActivity() {
 
                 val biometricManager = BiometricManager.from(this)
                 when (biometricManager.canAuthenticate(BIOMETRIC_STRONG)) {
-                    BiometricManager.BIOMETRIC_SUCCESS -> print("ALED")
-                    else -> {}
+                    BiometricManager.BIOMETRIC_SUCCESS -> AppSettings.canBeAuthenticateWithFinderPrint = true
+                    else -> AppSettings.canBeAuthenticateWithFinderPrint = false
                 }
 
                 BottomSheetScaffold(
                     scaffoldState = scaffoldModalState,
-                    sheetContent = {}
+                    sheetContent = {
+                        if (!AppSettings.isToyDescription.value) SettingsModal() else SwipeableCardDescriptionModal()
+                    }
                 ) {
                     Scaffold(
                         topBar = {
@@ -93,11 +101,18 @@ class MainActivity : AppCompatActivity() {
                                         ) {
                                             IconButton(
                                                 onClick = {
-                                                    showBiometricPrompt(
-                                                        coroutineScope,
-                                                        scaffoldState,
-                                                        scaffoldModalState.bottomSheetState
-                                                    )
+                                                    AppSettings.isToyDescription.value = false
+                                                    if (AppSettings.canBeAuthenticateWithFinderPrint && AppSettings.isFingerprintProtected) {
+                                                        showBiometricPrompt(
+                                                            coroutineScope,
+                                                            scaffoldState,
+                                                            scaffoldModalState.bottomSheetState
+                                                        )
+                                                    } else {
+                                                        coroutineScope.launch {
+                                                            scaffoldModalState.bottomSheetState.show()
+                                                        }
+                                                    }
                                                 }
                                             ) {
                                                 Icon(
@@ -118,7 +133,7 @@ class MainActivity : AppCompatActivity() {
                         },
                         modifier = Modifier.fillMaxSize()
                     ) {
-                        NavigationHost(scaffoldState, navController, Modifier.padding(it))
+                        NavigationHost(scaffoldState, navController, settingsModalState, Modifier.padding(it))
                     }
                 }
             }
