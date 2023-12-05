@@ -62,7 +62,8 @@ fun SwipeableCardDescriptionModal() {
                 .fillMaxWidth()
         ) {
             Card(
-                elevation = CardDefaults.cardElevation(4.dp), modifier = Modifier
+                elevation = CardDefaults.cardElevation(4.dp),
+                modifier = Modifier
                     .fillMaxHeight(.45f)
                     .fillMaxWidth()
             ) {
@@ -80,9 +81,13 @@ fun SwipeableCardDescriptionModal() {
                 }
             }
             Spacer(modifier = Modifier.height(10.dp))
-            Row(horizontalArrangement = Arrangement.Start, verticalAlignment = Alignment.CenterVertically, modifier = Modifier
-                .padding(horizontal = 20.dp)
-                .fillMaxWidth()) {
+            Row(
+                horizontalArrangement = Arrangement.Start,
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .padding(horizontal = 20.dp)
+                    .fillMaxWidth()
+            ) {
                 Text(
                     text = "KFC Espagne",
                     fontWeight = FontWeight.Bold,

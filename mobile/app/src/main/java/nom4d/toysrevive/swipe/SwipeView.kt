@@ -40,7 +40,11 @@ fun SwipeView(bottomSheetState: SheetState, modifier: Modifier = Modifier) {
     val state = rememberSwipeableCardState()
     val view = LocalView.current
 
-    Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center, modifier = modifier.fillMaxSize()) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
+        modifier = modifier.fillMaxSize()
+    ) {
         Box(
             contentAlignment = Alignment.Center,
             modifier = Modifier
@@ -62,8 +66,9 @@ fun SwipeView(bottomSheetState: SheetState, modifier: Modifier = Modifier) {
 //                    )
 //                }
             SwipeableImageCard(
-                painter = rememberAsyncImagePainter("https://pbs.twimg.com/media/Ex0MTkpXMAIE87u.jpg"),
-                contentDescription = "Test for home page",
+                painter = rememberAsyncImagePainter(
+                    "https://pbs.twimg.com/media/Ex0MTkpXMAIE87u.jpg"
+                ),
                 imageTitle = "KFC Espagne",
                 state = state,
                 modifier = Modifier.swipableCard(
@@ -82,11 +87,10 @@ fun SwipeView(bottomSheetState: SheetState, modifier: Modifier = Modifier) {
                                     state.swipe(Direction.Left)
                                 }
                                 view.performHapticFeedback(HapticFeedbackConstants.REJECT)
-
                             }
                             else -> {}
                         }
-                    },
+                    }
                 ),
                 onDetailButtonClicked = {
                     AppSettings.isToyDescription.value = true

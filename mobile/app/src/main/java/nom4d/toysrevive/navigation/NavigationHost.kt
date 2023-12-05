@@ -38,28 +38,34 @@ fun NavigationHost(
         composable(route = NavigationItem.ToyAdCreationScreen.routeName) {
             SwipeableImageCard(
                 painter = painter,
-                contentDescription = "KFC Espagne Image",
                 imageTitle = "test ad",
                 state = state,
-                onDetailButtonClicked = { Log.d("TEST CREATE SCREEN", "Test for Swipeable on Toy Ad Creation screen") },
+                onDetailButtonClicked = {
+                    Log.d(
+                        "TEST CREATE SCREEN",
+                        "Test for Swipeable on Toy Ad Creation screen"
+                    )
+                }
             )
         }
         composable(route = NavigationItem.WishListScreen.routeName) {
             SwipeableImageCard(
                 painter = painter,
-                contentDescription = "KFC Espagne Image",
                 imageTitle = "test love",
                 state = state,
-                onDetailButtonClicked = { Log.d("TEST WISH SCREEN", "Test for Swipeable on Love screen") },
+                onDetailButtonClicked = {
+                    Log.d("TEST WISH SCREEN", "Test for Swipeable on Love screen")
+                }
             )
         }
         composable(route = NavigationItem.ProfileScreen.routeName) {
             SwipeableImageCard(
                 painter = painter,
-                contentDescription = "KFC Espagne Image",
                 imageTitle = "test love",
                 state = state,
-                onDetailButtonClicked = { Log.d("TEST PROFILE SCREEN", "Test for Swipeable on Profile screen") },
+                onDetailButtonClicked = {
+                    Log.d("TEST PROFILE SCREEN", "Test for Swipeable on Profile screen")
+                }
             )
         }
     }

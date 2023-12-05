@@ -18,10 +18,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import nom4d.toysrevive.R
 
 @Composable
-fun BottomNavigationBar(
-    navController: NavController,
-    modifier: Modifier = Modifier
-) {
+fun BottomNavigationBar(navController: NavController, modifier: Modifier = Modifier) {
     val navigationItems = listOf(
         NavigationItem.WishListScreen,
         NavigationItem.HomeScreen,

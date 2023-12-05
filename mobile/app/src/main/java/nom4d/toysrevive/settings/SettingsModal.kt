@@ -115,8 +115,9 @@ fun LocationSettings() {
             TextField(
                 value = zipCode,
                 onValueChange = {
-                    if (it.length <= 6)
+                    if (it.length <= 6) {
                         zipCode = it
+                    }
                 },
                 textStyle = TextStyle(
                     fontWeight = FontWeight.Bold,
@@ -176,9 +177,7 @@ fun LocationSettings() {
         }
         Slider(
             range,
-            onValueChange = {
-                range = it
-            },
+            onValueChange = { range = it },
             colors = SliderDefaults.colors(
                 thumbColor = MaterialTheme.colorScheme.secondary,
                 activeTrackColor = MaterialTheme.colorScheme.secondary,
@@ -207,7 +206,12 @@ fun ParentalControl(fingerProtection: Boolean, onActivateFingerProtection: (Bool
                 .fillMaxWidth(.9f)
                 .padding(2.dp)
         ) {
-            Text("Fingerprint Lock", fontWeight = FontWeight.Bold, fontSize = 12.sp, modifier = Modifier.padding(horizontal = 5.dp))
+            Text(
+                "Fingerprint Lock",
+                fontWeight = FontWeight.Bold,
+                fontSize = 12.sp,
+                modifier = Modifier.padding(horizontal = 5.dp)
+            )
             Checkbox(
                 checked = fingerProtection,
                 onCheckedChange = onActivateFingerProtection

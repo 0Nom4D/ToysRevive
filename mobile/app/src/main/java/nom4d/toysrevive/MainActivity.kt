@@ -76,14 +76,19 @@ class MainActivity : AppCompatActivity() {
 
                 val biometricManager = BiometricManager.from(this)
                 when (biometricManager.canAuthenticate(BIOMETRIC_STRONG)) {
-                    BiometricManager.BIOMETRIC_SUCCESS -> AppSettings.canBeAuthenticateWithFinderPrint = true
+                    BiometricManager.BIOMETRIC_SUCCESS ->
+                        AppSettings.canBeAuthenticateWithFinderPrint = true
                     else -> AppSettings.canBeAuthenticateWithFinderPrint = false
                 }
 
                 BottomSheetScaffold(
                     scaffoldState = scaffoldModalState,
                     sheetContent = {
-                        if (!AppSettings.isToyDescription.value) SettingsModal() else SwipeableCardDescriptionModal()
+                        if (!AppSettings.isToyDescription.value) {
+                            SettingsModal()
+                        } else {
+                            SwipeableCardDescriptionModal()
+                        }
                     }
                 ) {
                     Scaffold(
@@ -101,18 +106,11 @@ class MainActivity : AppCompatActivity() {
                                         ) {
                                             IconButton(
                                                 onClick = {
-                                                    AppSettings.isToyDescription.value = false
-                                                    if (AppSettings.canBeAuthenticateWithFinderPrint && AppSettings.isFingerprintProtected) {
-                                                        showBiometricPrompt(
-                                                            coroutineScope,
-                                                            scaffoldState,
-                                                            scaffoldModalState.bottomSheetState
-                                                        )
-                                                    } else {
-                                                        coroutineScope.launch {
-                                                            scaffoldModalState.bottomSheetState.show()
-                                                        }
-                                                    }
+                                                    openSettingsBottomModalSheet(
+                                                        coroutineScope,
+                                                        scaffoldState,
+                                                        scaffoldModalState.bottomSheetState
+                                                    )
                                                 }
                                             ) {
                                                 Icon(
@@ -133,9 +131,33 @@ class MainActivity : AppCompatActivity() {
                         },
                         modifier = Modifier.fillMaxSize()
                     ) {
-                        NavigationHost(scaffoldState, navController, settingsModalState, Modifier.padding(it))
+                        NavigationHost(
+                            scaffoldState,
+                            navController,
+                            settingsModalState,
+                            Modifier.padding(it)
+                        )
                     }
                 }
+            }
+        }
+    }
+
+    private fun openSettingsBottomModalSheet(
+        coroutineScope: CoroutineScope,
+        scaffoldState: SnackbarHostState,
+        bottomSheetState: SheetState
+    ) {
+        AppSettings.isToyDescription.value = false
+        if (AppSettings.canBeAuthenticateWithFinderPrint && AppSettings.isFingerprintProtected) {
+            showBiometricPrompt(
+                coroutineScope,
+                scaffoldState,
+                bottomSheetState
+            )
+        } else {
+            coroutineScope.launch {
+                bottomSheetState.show()
             }
         }
     }
