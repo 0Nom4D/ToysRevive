@@ -30,6 +30,9 @@ dependencies:
 - servant-server
 - servant-swagger
 - servant-swagger-ui
+- beam-core
+- beam-postgres
+- beam-migrate
 - swagger2
 - lens
 - text

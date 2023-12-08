@@ -41,6 +41,14 @@ packages:
 #   commit: e7b331f14bcffb8367cd58fbfc8b40ec7642100a
 #
 # extra-deps: []
+extra-deps:
+- git: https://github.com/haskell-beam/beam.git
+  commit: 2b745432780f90916fd8ed61ce99f664b5e4d55a
+  extra-dep: true
+  subdirs:
+    - beam-core
+    - beam-postgres
+    - beam-migrate
 
 # Override default flag values for local packages and extra-deps
 # flags: {}

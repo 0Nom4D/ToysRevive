@@ -27,6 +27,7 @@ library
       Server
       API.ServerMessage
   other-modules:
+      Database.Connection
       Paths_ToysRevive_server
   autogen-modules:
       Paths_ToysRevive_server
@@ -41,6 +42,9 @@ library
   build-depends:
       aeson
     , base >=4.7 && <5
+    , beam-core
+    , beam-migrate
+    , beam-postgres
     , lens
     , servant
     , servant-server
@@ -70,6 +74,9 @@ executable ToysRevive-server-exe
       ToysRevive-server
     , aeson
     , base >=4.7 && <5
+    , beam-core
+    , beam-migrate
+    , beam-postgres
     , lens
     , servant
     , servant-server
@@ -102,6 +109,9 @@ test-suite ToysRevive-server-test
     , ToysRevive-server
     , aeson
     , base >=4.7 && <5
+    , beam-core
+    , beam-migrate
+    , beam-postgres
     , lens
     , servant
     , servant-server
