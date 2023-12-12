@@ -1,0 +1,47 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  engineType = "binary"
+	binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator classes {
+  provider                        = "prisma-types-generator"
+  output                          = "../src/prisma/models"
+  outputToNestJsResourceStructure = "false"
+  flatResourceStructure           = "false"
+  exportRelationModifierClasses   = "true"
+  reExport                        = "true"
+  dtoSuffix                       = ""
+  entityPrefix                    = ""
+  entitySuffix                    = "WithRelations"
+  classValidation                 = "true"
+  fileNamingStyle                 = "camel"
+  noDependencies                  = "false"
+  excludeEntity                   = "false"
+  excludePlainDto                 = "false"
+  excludeCreateDto                = "false"
+  excludeUpdateDto                = "false"
+  excludeConnectDto               = "true"
+  definiteAssignmentAssertion     = "true"
+}
+
+/////// Models
+
+model User {
+	/// @description Unique numeric user identifier
+	/// @example 123
+	id				Int		@id @default(autoincrement())
+	/// @description the username
+	name			String	@unique
+	/// @description the hashed password of the user\'s account
+	password		String
+	@@map("users")
+}

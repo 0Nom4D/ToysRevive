@@ -5,10 +5,10 @@ WORKDIR /app
 COPY ./*.json ./
 COPY ./*.lock ./
 RUN yarn install
-#COPY ./prisma ./prisma
+COPY ./prisma ./prisma
 RUN yarn build
 
 CMD yarn							\
 	&& yarn build					\
-	#&& yarn run prisma migrate dev	\
+	&& yarn run prisma migrate dev	\
 	&& yarn start:dev
