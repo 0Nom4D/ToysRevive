@@ -8,10 +8,9 @@ import Data.Swagger
 import Servant(Proxy, HasServer (ServerT), Application, NamedRoutes, (:-), Proxy(Proxy), hoistServer, serve, type (:<|>) ((:<|>)))
 import Servant.Swagger
 import Servant.Swagger.UI
-import           Servant.API.Generic                    (ToServantApi)
 import App (State(..), AppM)
 import qualified API.ServerMessage
-import GHC.Generics (Generic (Rep))
+import GHC.Generics (Generic)
 import Control.Monad.Trans.Reader (runReaderT)
 
 data API mode = API
@@ -30,16 +29,18 @@ app state = serve proxy $
         server
     where
         --context = EmptyContext
-        proxy = Proxy :: Proxy NamedAPI
+        proxy = Proxy :: Proxy SwaggerWithAPI
 
 -- | The Controllers for the multiple routes
-server :: ServerT NamedAPI AppM
+server :: ServerT SwaggerWithAPI AppM
 server = API {
     serverMessage = API.ServerMessage.handler
-    }
+    } :<|> swaggerSchemaUIServerT appSwagger
 
 -- | Swagger Related
 type SwaggerAPI = SwaggerSchemaUI "swagger" "swagger.json"
+
+type SwaggerWithAPI = NamedAPI :<|> SwaggerAPI
 
 -- -- | Swagger spec for our API.
 appSwagger :: Swagger
