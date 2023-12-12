@@ -1,0 +1,53 @@
+{
+	"root": true,
+	"extends": [
+		"eslint:recommended",
+		"plugin:@typescript-eslint/recommended"
+	],
+	"parser": "@typescript-eslint/parser",
+	"parserOptions": {
+		"project": [
+			"./tsconfig.json"
+		]
+	},
+	"plugins": [
+		"@typescript-eslint",
+		"unused-imports",
+		"import"
+	],
+	"ignorePatterns": ["node_modules/", "test/", "src/**/*.spec.ts", "src/prisma/models"],
+	"rules": {
+		"unused-imports/no-unused-imports": "warn",
+		"import/first": "error",
+		"import/no-duplicates": "error",
+		"@typescript-eslint/no-empty-function": "off",
+		"@typescript-eslint/switch-exhaustiveness-check": "error",
+		"@typescript-eslint/no-namespace": "off",
+		"@typescript-eslint/no-explicit-any": "off",
+		"@typescript-eslint/no-unused-vars": "off",
+		"@typescript-eslint/no-non-null-assertion": "off",
+		"no-duplicate-imports": "error",
+		"id-length": "error",
+		"init-declarations": "error",
+		"no-else-return": "error",
+		"sort-imports": ["warn", { "ignoreDeclarationSort": true }],
+		"vars-on-top": "warn",
+		"default-case-last": "warn",
+		"linebreak-style": ["error", "unix"],
+		"max-statements-per-line": ["error", { "max": 1 }],
+		"no-unused-private-class-members": "error",
+		"max-depth": ["error", { "max": 3 }],
+		"consistent-this": "error",
+		"no-console": "error",
+		"no-eval": "error",
+		"padding-line-between-statements": [
+			"error",
+			{ "blankLine": "always", "prev": ["const", "let", "var"], "next": "*"},
+			{ "blankLine": "any",    "prev": ["const", "let", "var"], "next": ["const", "let", "var"]},
+			{ "blankLine": "never",  "prev": "import", "next": "import"}
+		],
+		"no-return-await": "error",
+		"max-len": ["error", { "code": 100, "ignorePattern": "(^import)|(export\\s)", "ignoreTemplateLiterals": true, "ignoreComments": true, "ignoreStrings": true }],
+		"no-shadow": "error"
+	}
+}
