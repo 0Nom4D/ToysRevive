@@ -49,6 +49,13 @@ extra-deps:
     - beam-core
     - beam-postgres
     - beam-migrate
+- git: https://github.com/haskell-servant/servant.git
+  commit: 8a4a7f59abd9a07f29e282026a8f18c1e7bd8b71
+  subdirs:
+    - servant
+    - servant-server
+    - servant-swagger
+- mr-env-0.1.0.4@sha256:56439c7df09a83b72b170f104723293643ad2635df03cdcd174a05d0d73e788d,1055
 
 # Override default flag values for local packages and extra-deps
 # flags: {}

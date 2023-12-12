@@ -26,8 +26,9 @@ library
   exposed-modules:
       Server
       API.ServerMessage
-  other-modules:
       Database.Connection
+  other-modules:
+      App
       Paths_ToysRevive_server
   autogen-modules:
       Paths_ToysRevive_server
@@ -38,6 +39,7 @@ library
       DeriveGeneric
       TypeOperators
       OverloadedStrings
+      DerivingStrategies
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints
   build-depends:
       aeson
@@ -46,12 +48,15 @@ library
     , beam-migrate
     , beam-postgres
     , lens
+    , mr-env
+    , postgresql-simple
     , servant
     , servant-server
     , servant-swagger
     , servant-swagger-ui
     , swagger2
     , text
+    , transformers
     , wai
     , warp
   default-language: Haskell2010
@@ -69,6 +74,7 @@ executable ToysRevive-server-exe
       DeriveGeneric
       TypeOperators
       OverloadedStrings
+      DerivingStrategies
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       ToysRevive-server
@@ -78,12 +84,15 @@ executable ToysRevive-server-exe
     , beam-migrate
     , beam-postgres
     , lens
+    , mr-env
+    , postgresql-simple
     , servant
     , servant-server
     , servant-swagger
     , servant-swagger-ui
     , swagger2
     , text
+    , transformers
     , wai
     , warp
   default-language: Haskell2010
@@ -103,6 +112,7 @@ test-suite ToysRevive-server-test
       DeriveGeneric
       TypeOperators
       OverloadedStrings
+      DerivingStrategies
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       HUnit
@@ -113,6 +123,8 @@ test-suite ToysRevive-server-test
     , beam-migrate
     , beam-postgres
     , lens
+    , mr-env
+    , postgresql-simple
     , servant
     , servant-server
     , servant-swagger
@@ -121,6 +133,7 @@ test-suite ToysRevive-server-test
     , test-framework
     , test-framework-hunit
     , text
+    , transformers
     , wai
     , warp
   default-language: Haskell2010

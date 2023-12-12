@@ -1,20 +1,26 @@
-module API.ServerMessage (API, endpoints, ServerMessage (ServerMessage), messageEndpoint) where
+module API.ServerMessage (ServerMessageAPI, handler, ServerMessage (ServerMessage), messageEndpoint) where
 
 import Control.Lens
 import Data.Aeson (ToJSON, toJSON)
 import Data.Swagger
 import GHC.Generics (Generic)
 import Servant
+import Servant.Server.Generic (AsServerT)
+import App (AppM)
 
 -- | The Routes of the API
-type API = Get '[JSON] ServerMessage
+data ServerMessageAPI mode = ServerMessageAPI {
+    endpoint :: mode :- Get '[JSON] ServerMessage
+} deriving stock (Generic)
 
-endpoints :: Server API
-endpoints = return messageEndpoint
+handler :: ServerMessageAPI (AsServerT AppM)
+handler = ServerMessageAPI {
+    endpoint = messageEndpoint
+}
 
 -- | A Controller for a single endpoint
-messageEndpoint :: ServerMessage
-messageEndpoint = ServerMessage "Hello World"
+messageEndpoint :: AppM ServerMessage
+messageEndpoint = return $ ServerMessage "Hello World"
 
 -- | Data Model
 data ServerMessage = ServerMessage

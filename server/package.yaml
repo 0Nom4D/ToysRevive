@@ -23,6 +23,7 @@ default-extensions:
 - DeriveGeneric
 - TypeOperators
 - OverloadedStrings
+- DerivingStrategies
 
 dependencies:
 - base >= 4.7 && < 5
@@ -32,6 +33,7 @@ dependencies:
 - servant-swagger-ui
 - beam-core
 - beam-postgres
+- postgresql-simple
 - beam-migrate
 - swagger2
 - lens
@@ -39,6 +41,8 @@ dependencies:
 - aeson
 - wai
 - warp
+- mr-env
+- transformers
 
 ghc-options:
 - -Wall
@@ -56,6 +60,7 @@ library:
   exposed-modules:
   - Server
   - API.ServerMessage
+  - Database.Connection
 
 executables:
   ToysRevive-server-exe:

@@ -1,15 +1,14 @@
 module Main (main) where
 
 import Network.Wai.Handler.Warp (run)
-import Servant
-import Server
-import Database.Beam.Postgres (connectPostgreSQL)
+import Server (app, State(State))
+import Database.Connection (buildConnectionURI)
+import System.Environment.MrEnv (envAsInt)
 
 -- | Entrypoint of the binary
 main :: IO ()
-main = run 8080 application
-
--- | The Server Application
-application :: Application
-application = serve (Proxy :: Proxy APIWithSwagger) server
+main = do
+    connectionURI <- buildConnectionURI
+    appPort <- envAsInt "TR_SERVER_PORT" 8080
+    run appPort $ app (State undefined)
 

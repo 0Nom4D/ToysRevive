@@ -43,6 +43,52 @@ packages:
     commit: 2b745432780f90916fd8ed61ce99f664b5e4d55a
     git: https://github.com/haskell-beam/beam.git
     subdir: beam-migrate
+- completed:
+    commit: 8a4a7f59abd9a07f29e282026a8f18c1e7bd8b71
+    git: https://github.com/haskell-servant/servant.git
+    name: servant
+    pantry-tree:
+      sha256: a673b74e93525aeee5f800540eefeb8f238491c8902a534429ed80fcf5e04353
+      size: 3020
+    subdir: servant
+    version: 0.20.1
+  original:
+    commit: 8a4a7f59abd9a07f29e282026a8f18c1e7bd8b71
+    git: https://github.com/haskell-servant/servant.git
+    subdir: servant
+- completed:
+    commit: 8a4a7f59abd9a07f29e282026a8f18c1e7bd8b71
+    git: https://github.com/haskell-servant/servant.git
+    name: servant-server
+    pantry-tree:
+      sha256: a7d8d58b5c1433722ac27ed76477cb7a5aa3add0c481e50b8a83a33e94719924
+      size: 2728
+    subdir: servant-server
+    version: '0.20'
+  original:
+    commit: 8a4a7f59abd9a07f29e282026a8f18c1e7bd8b71
+    git: https://github.com/haskell-servant/servant.git
+    subdir: servant-server
+- completed:
+    commit: 8a4a7f59abd9a07f29e282026a8f18c1e7bd8b71
+    git: https://github.com/haskell-servant/servant.git
+    name: servant-swagger
+    pantry-tree:
+      sha256: 163842bb7fac340b7ceae33c0345216439c3e329bf6886ad17311e951cc7887b
+      size: 1636
+    subdir: servant-swagger
+    version: '1.2'
+  original:
+    commit: 8a4a7f59abd9a07f29e282026a8f18c1e7bd8b71
+    git: https://github.com/haskell-servant/servant.git
+    subdir: servant-swagger
+- completed:
+    hackage: mr-env-0.1.0.4@sha256:56439c7df09a83b72b170f104723293643ad2635df03cdcd174a05d0d73e788d,1055
+    pantry-tree:
+      sha256: da91d4e0f5aff5336e3e73ecb1d44fe595dd47bc572335956ba30d937d14573d
+      size: 376
+  original:
+    hackage: mr-env-0.1.0.4@sha256:56439c7df09a83b72b170f104723293643ad2635df03cdcd174a05d0d73e788d,1055
 snapshots:
 - completed:
     sha256: 23bb9bb355bfdb1635252e120a29b712f0d5e8a6c6a65c5ab5bd6692f46c438e
