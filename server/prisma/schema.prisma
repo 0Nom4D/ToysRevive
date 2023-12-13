@@ -39,9 +39,17 @@ model User {
 	/// @description Unique numeric user identifier
 	/// @example 123
 	id				Int		@id @default(autoincrement())
-	/// @description the username
-	name			String	@unique
+	/// @description the last name of the user
+	lastName			String	@unique
+  /// @description the first name of the user
+	firstName			String
+  /// @description the username
+	userName			String	@unique
 	/// @description the hashed password of the user\'s account
-	password		String
+	password		  String
+  /// @description the phone number of the user
+	phone		      String
+  /// @description the email address of th user
+	email		      String  @unique
 	@@map("users")
 }
