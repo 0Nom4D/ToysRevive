@@ -14,7 +14,7 @@ import {
 	APP_GUARD, HttpAdapterHost, Reflector
 } from "@nestjs/core";
 import mime from "mime";
-import cookieParser from "cookie-parser";
+import * as cookieParser from "cookie-parser";
 import helmet from "helmet";
 import { JwtCookieMiddleware } from "./authentication/jwt/jwt-middleware";
 import JwtAuthGuard from "./authentication/jwt/jwt-auth.guard";

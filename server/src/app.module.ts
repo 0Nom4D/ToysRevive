@@ -1,12 +1,21 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { PrismaModule } from './prisma/prisma.module';
 import { UserModule } from './user/user.module';
-import { AppProviders } from './app.plugins';
+import { AppProviders, applyMiddlewares } from './app.plugins';
+import { AuthenticationModule } from './authentication/authentication.module';
 
 @Module({
-	imports: [PrismaModule, UserModule],
+	imports: [
+		PrismaModule,
+		UserModule,
+		AuthenticationModule
+	],
 	controllers: [AppController],
 	providers: AppProviders,
 })
-export class AppModule {}
+export class AppModule {
+	configure(consumer: MiddlewareConsumer) {
+		applyMiddlewares(consumer);
+	}
+}

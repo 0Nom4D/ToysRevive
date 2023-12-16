@@ -2,6 +2,7 @@ import { Controller, Get, Param, Post, Request, UseGuards } from '@nestjs/common
 import { UpdateUserDTO } from './user.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { User } from 'src/prisma/models';
+import JwtAuthGuard from 'src/authentication/jwt/jwt-auth.guard';
 
 @Controller('users')
 export class UserController {
@@ -20,13 +21,13 @@ export class UserController {
 	}
 
 	@Get('me')
-	@UseGuards(AuthGuard)
+	@UseGuards(JwtAuthGuard)
 	public getCurrentUser(@Request() req: Express.Request) {
 		return (req as { user: User }).user;
 	}
 
 	@Post('me')
-	@UseGuards(AuthGuard)
+	@UseGuards(JwtAuthGuard)
 	public updateCurrentUser(
 		updateDTO: UpdateUserDTO
 	) {

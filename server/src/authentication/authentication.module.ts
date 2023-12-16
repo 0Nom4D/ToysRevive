@@ -23,4 +23,4 @@ import LocalStrategy from './local/local.strategy';
 		JwtStrategy
 	]
 })
-export default class AuthenticationModule {}
+export class AuthenticationModule {}

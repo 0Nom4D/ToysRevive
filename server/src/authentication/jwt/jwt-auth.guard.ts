@@ -15,4 +15,8 @@ export default class JwtAuthGuard extends AuthGuard('jwt') {
 		}
 		return user;
 	}
+
+	canActivate(context: ExecutionContext) {
+		return super.canActivate(context);
+	}
 }

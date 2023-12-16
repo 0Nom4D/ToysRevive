@@ -13,7 +13,9 @@
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\"",
-    "test": "jest",
+    "test:setup": "docker run -d --rm --env-file ../.env -p 5432:5432 --name toysrevive-test-db postgres:alpine3.16 & sleep 5 & POSTGRES_HOST=localhost yarn run prisma migrate dev",
+    "test:teardown": "docker container stop toysrevive-test-db",
+    "test": "POSTGRES_HOST=localhost MEELO_DIR=test/assets/ jest -i",
     "migration:create": "docker run -d --rm --env-file ../.env -p 5432:5432 --name test-db postgres:alpine3.16 ; sleep 5; POSTGRES_HOST=localhost yarn run prisma migrate dev && docker container stop test-db",
     "test:cov": "jest --coverage"
   },
@@ -26,9 +28,11 @@
     "@nestjs/swagger": "^7.1.16",
     "@prisma/client": "^5.7.0",
     "bcrypt": "^5.1.1",
+    "class-transformer": "^0.5.1",
     "class-validator": "^0.14.0",
     "cookie-parser": "^1.4.6",
     "helmet": "^7.1.0",
+    "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
     "passport-local": "^1.0.0",
     "reflect-metadata": "^0.1.13"
@@ -37,6 +41,7 @@
     "@nestjs/cli": "^10.0.0",
     "@nestjs/schematics": "^10.0.0",
     "@nestjs/testing": "^10.0.0",
+    "@types/cookie-parser": "^1.4.6",
     "@types/express": "^4.17.17",
     "@types/jest": "^29.5.2",
     "@types/node": "^20.3.1",
@@ -66,15 +71,25 @@
       "json",
       "ts"
     ],
-    "rootDir": "src",
+    "roots": [
+      "<rootDir>",
+      "src"
+    ],
+    "modulePaths": [
+      "<rootDir>",
+      "src"
+    ],
     "testRegex": ".*\\.spec\\.ts$",
     "transform": {
       "^.+\\.(t|j)s$": "ts-jest"
     },
     "collectCoverageFrom": [
-      "**/*.(t|j)s"
+      "<rootDir>/src/**/*.(t|j)s"
     ],
-    "coverageDirectory": "../coverage",
+    "coverageDirectory": "coverage",
+    "coverageReporters": [
+      "lcov"
+    ],
     "testEnvironment": "node"
   }
 }
