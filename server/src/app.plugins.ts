@@ -19,6 +19,7 @@ import helmet from "helmet";
 import { JwtCookieMiddleware } from "./authentication/jwt/jwt-middleware";
 import JwtAuthGuard from "./authentication/jwt/jwt-auth.guard";
 import AllExceptionsFilter from "./exceptions/all-exceptions.filter";
+import PrismaExceptionsFilter from "./exceptions/prisma.filter";
 
 // To call before application bootstrap/launch
 const presetup = () => {
@@ -34,6 +35,7 @@ const buildInterceptors = (app: INestApplication) => [
 
 const buildExceptionFilters = (app: INestApplication) => [
 	new AllExceptionsFilter(app.get(HttpAdapterHost)),
+	new PrismaExceptionsFilter(app.get(HttpAdapterHost)),
 ];
 
 const buildPipes = (_app: INestApplication) => [
