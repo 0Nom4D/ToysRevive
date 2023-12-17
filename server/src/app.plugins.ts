@@ -13,7 +13,6 @@ import {
 import {
 	APP_GUARD, HttpAdapterHost, Reflector
 } from "@nestjs/core";
-import mime from "mime";
 import * as cookieParser from "cookie-parser";
 import helmet from "helmet";
 import { JwtCookieMiddleware } from "./authentication/jwt/jwt-middleware";
@@ -23,9 +22,6 @@ import PrismaExceptionsFilter from "./exceptions/prisma.filter";
 
 // To call before application bootstrap/launch
 const presetup = () => {
-	mime.define({
-		'audio/mpeg': ['m4a', mime.getExtension('audio/mpeg')!]
-	}, true);
 };
 
 // Interceptors to use
