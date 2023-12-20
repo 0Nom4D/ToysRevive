@@ -4,7 +4,7 @@ import {
 	ExceptionFilter,
 	HttpStatus,
 	NotFoundException,
-} from "@nestjs/common";
+} from '@nestjs/common';
 
 @Catch(NotFoundException)
 export default class NotFoundExceptionFilter implements ExceptionFilter {
@@ -14,7 +14,7 @@ export default class NotFoundExceptionFilter implements ExceptionFilter {
 
 		response.status(HttpStatus.NOT_FOUND).json({
 			statusCode: HttpStatus.NOT_FOUND,
-			message: "Route not found.",
+			message: 'Route not found.',
 		});
 	}
 }

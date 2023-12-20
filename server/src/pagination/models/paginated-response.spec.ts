@@ -1,152 +1,155 @@
-import InvalidPaginationParameterValue from "../pagination.exceptions";
-import PaginatedResponse from "./paginated-response"
+import InvalidPaginationParameterValue from '../pagination.exceptions';
+import PaginatedResponse from './paginated-response';
 
-const fullItemsList = [...Array(99)].map((_,i) => ({ id: i+1 }));
+const fullItemsList = [...Array(99)].map((_, i) => ({ id: i + 1 }));
 const baseRequest = {
-	path: '/route'
-}
-describe("Paginated Response", () => {
-	it("default page size, first page", () => {
+	path: '/route',
+};
+describe('Paginated Response', () => {
+	it('default page size, first page', () => {
 		const request = {
 			...baseRequest,
-			query: {}
-		}
-		const response = new PaginatedResponse(
-			fullItemsList, request
-		);
+			query: {},
+		};
+		const response = new PaginatedResponse(fullItemsList, request);
 		expect(response.items).toStrictEqual(fullItemsList);
 		expect(response.metadata).toStrictEqual({
 			page: 1,
 			this: '/route',
 			next: '/route?skip=20',
-			previous: null
-		})
+			previous: null,
+		});
 	});
 
-	it("default page size, second page", () => {
+	it('default page size, second page', () => {
 		const request = {
 			...baseRequest,
 			query: {
-				skip: 20
-			}
-		}
+				skip: 20,
+			},
+		};
 		const response = new PaginatedResponse(
-			fullItemsList.slice(20, 40), request
+			fullItemsList.slice(20, 40),
+			request,
 		);
 		expect(response.items.length).toStrictEqual(20);
 		expect(response.metadata).toStrictEqual({
 			page: 2,
 			this: '/route?skip=20',
 			next: '/route?skip=40',
-			previous: '/route'
-		})
+			previous: '/route',
+		});
 	});
 
-	it("default page size, third page", () => {
+	it('default page size, third page', () => {
 		const request = {
 			...baseRequest,
 			query: {
-				skip: 40
-			}
-		}
+				skip: 40,
+			},
+		};
 		const response = new PaginatedResponse(
-			fullItemsList.slice(40, 60), request
+			fullItemsList.slice(40, 60),
+			request,
 		);
 		expect(response.items.length).toStrictEqual(20);
 		expect(response.metadata).toStrictEqual({
 			page: 3,
 			this: '/route?skip=40',
 			next: '/route?skip=60',
-			previous: '/route?skip=20'
-		})
+			previous: '/route?skip=20',
+		});
 	});
 
-	it("default page size, last page", () => {
+	it('default page size, last page', () => {
 		const request = {
 			...baseRequest,
 			query: {
-				skip: 80
-			}
-		}
+				skip: 80,
+			},
+		};
 		const response = new PaginatedResponse(
-			fullItemsList.slice(80), request
+			fullItemsList.slice(80),
+			request,
 		);
 		expect(response.items.length).toStrictEqual(19);
 		expect(response.metadata).toStrictEqual({
 			page: 5,
 			this: '/route?skip=80',
 			next: null,
-			previous: '/route?skip=60'
-		})
-	})
+			previous: '/route?skip=60',
+		});
+	});
 
-	it("default page size, truncated last page", () => {
+	it('default page size, truncated last page', () => {
 		const request = {
 			...baseRequest,
 			query: {
-				skip: 98
-			}
-		}
+				skip: 98,
+			},
+		};
 		const response = new PaginatedResponse(
-			fullItemsList.slice(98), request
+			fullItemsList.slice(98),
+			request,
 		);
 		expect(response.items.length).toStrictEqual(1);
 		expect(response.metadata).toStrictEqual({
 			page: 5,
 			this: '/route?skip=98',
 			next: null,
-			previous: '/route?skip=80'
-		})
+			previous: '/route?skip=80',
+		});
 	});
 
-	it("page size = 10, first page", () => {
+	it('page size = 10, first page', () => {
 		const request = {
 			...baseRequest,
 			query: {
-				take: 10
-			}
-		}
+				take: 10,
+			},
+		};
 		const response = new PaginatedResponse(
-			fullItemsList.slice(0, 10), request
+			fullItemsList.slice(0, 10),
+			request,
 		);
 		expect(response.metadata).toStrictEqual({
 			page: 1,
 			this: '/route?take=10',
 			next: '/route?take=10&skip=10',
-			previous: null
-		})
-	})
+			previous: null,
+		});
+	});
 
-	it("page size = 10, second page", () => {
+	it('page size = 10, second page', () => {
 		const request = {
 			...baseRequest,
 			query: {
 				take: 10,
-				skip: 10
-			}
-		}
+				skip: 10,
+			},
+		};
 		const response = new PaginatedResponse(
-			fullItemsList.slice(10, 20), request
+			fullItemsList.slice(10, 20),
+			request,
 		);
 		expect(response.metadata).toStrictEqual({
 			page: 2,
 			this: '/route?take=10&skip=10',
 			next: '/route?take=10&skip=20',
-			previous: '/route?take=10'
-		})
-	})
+			previous: '/route?take=10',
+		});
+	});
 
 	it("throw, as 'take' parameter is zero", () => {
 		const request = {
 			...baseRequest,
 			query: {
 				take: 0,
-				skip: 10
-			}
-		}
-		const testResponse = () => new PaginatedResponse(
-			fullItemsList.slice(10, 20), request
-		);
+				skip: 10,
+			},
+		};
+		const testResponse = () =>
+			new PaginatedResponse(fullItemsList.slice(10, 20), request);
 		expect(testResponse).toThrow(InvalidPaginationParameterValue);
-	})
-})
+	});
+});

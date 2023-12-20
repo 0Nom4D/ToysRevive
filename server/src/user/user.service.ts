@@ -15,20 +15,21 @@ export class UserService {
 	}
 
 	async getByCredentials(loginDto: LoginDTO) {
-		const user = await this.prismaService.user.findFirstOrThrow(
-			{ where: { userName: loginDto.username } }
-		);
+		const user = await this.prismaService.user.findFirstOrThrow({
+			where: { userName: loginDto.username },
+		});
 
 		if (!bcrypt.compareSync(loginDto.password, user.password)) {
-			throw new HttpException('Username or password is incorrect', HttpStatus.NOT_FOUND);
+			throw new HttpException(
+				'Username or password is incorrect',
+				HttpStatus.NOT_FOUND,
+			);
 		}
 		return user;
 	}
 
 	async getById(id: number) {
-		return this.prismaService.user.findFirstOrThrow(
-			{ where: { id: id } }
-		);
+		return this.prismaService.user.findFirstOrThrow({ where: { id: id } });
 	}
 
 	createUser(registrationDTO: CreateUserDTO) {
@@ -39,8 +40,8 @@ export class UserService {
 				email: registrationDTO.email,
 				firstName: registrationDTO.firstName,
 				lastName: registrationDTO.lastName,
-				password: this.encryptPassword(registrationDTO.password)
-			}
-		})
+				password: this.encryptPassword(registrationDTO.password),
+			},
+		});
 	}
 }

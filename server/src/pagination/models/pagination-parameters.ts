@@ -1,5 +1,5 @@
-import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
-import { IsOptional, IsPositive } from "class-validator";
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { IsOptional, IsPositive } from 'class-validator';
 
 /**
  * Default number of elements to take
@@ -17,7 +17,7 @@ export class PaginationParameters {
 	@ApiProperty({
 		required: false,
 		description: `Specifies the number of elements to return`,
-		default: defaultPageSize
+		default: defaultPageSize,
 	})
 	@IsPositive()
 	@IsOptional()

@@ -1,7 +1,13 @@
-import { ApiProperty } from "@nestjs/swagger";
-import { IsEmail, IsMobilePhone, IsNotEmpty, IsString, MinLength } from "class-validator";
-import { IntersectionType, PartialType } from "@nestjs/mapped-types";
-import { CreateUser } from "src/prisma/models";
+import { ApiProperty } from '@nestjs/swagger';
+import {
+	IsEmail,
+	IsMobilePhone,
+	IsNotEmpty,
+	IsString,
+	MinLength,
+} from 'class-validator';
+import { IntersectionType, PartialType } from '@nestjs/mapped-types';
+import { CreateUser } from 'src/prisma/models';
 
 export class CreateUserDTO extends IntersectionType(CreateUser) {
 	@MinLength(6)
@@ -10,7 +16,7 @@ export class CreateUserDTO extends IntersectionType(CreateUser) {
 	password: string;
 	@ApiProperty({
 		description: 'the phone number of the user',
-		example: '0123456789'
+		example: '0123456789',
 	})
 	@IsNotEmpty()
 	@IsString()

@@ -5,21 +5,21 @@ import { defaultPageSize } from './pagination-parameters';
 
 class PaginationMetadata {
 	@ApiProperty({
-		description: 'The current URL'
+		description: 'The current URL',
 	})
 	this: string;
 
 	@ApiProperty({
 		description: 'The URL of the next page, if there is one',
 		type: String,
-		nullable: true
+		nullable: true,
 	})
 	next: string | null;
 
 	@ApiProperty({
 		description: 'The URL of the previous page, if there is one',
 		type: String,
-		nullable: true
+		nullable: true,
 	})
 	previous: string | null;
 
@@ -27,7 +27,7 @@ class PaginationMetadata {
 		description: 'The index of the page, if there is one',
 		type: Number,
 		nullable: true,
-		example: 3
+		example: 3,
 	})
 	page: number | null;
 }
@@ -39,11 +39,11 @@ export default class PaginatedResponse<T extends { id: number }> {
 	@ApiProperty({ type: Array })
 	items: T[];
 
-	static async awaiting<P extends { id: number }>(items: Promise<P>[], request: Request | any) {
-		return new PaginatedResponse<P>(
-			await Promise.all(items),
-			request
-		);
+	static async awaiting<P extends { id: number }>(
+		items: Promise<P>[],
+		request: Request | any,
+	) {
+		return new PaginatedResponse<P>(await Promise.all(items), request);
 	}
 
 	constructor(items: T[], request: Request | any) {
@@ -61,35 +61,37 @@ export default class PaginatedResponse<T extends { id: number }> {
 		if (!isNaN(afterId)) {
 			this.metadata = {
 				this: this.buildUrl(route, request.query),
-				next: itemsCount >= take
-					? this.buildUrl(route, {
-						...request.query,
-						afterId: items.at(-1)?.id ?? null
-					})
-					: null,
+				next:
+					itemsCount >= take
+						? this.buildUrl(route, {
+								...request.query,
+								afterId: items.at(-1)?.id ?? null,
+							})
+						: null,
 				previous: null,
-				page: null
+				page: null,
 			};
 			return;
 		}
 		const currentPage = 1 + Math.floor(skipped / take);
 
 		if (skipped % take) {
-			skipped += take - skipped % take;
+			skipped += take - (skipped % take);
 		}
 		this.metadata = {
 			this: this.buildUrl(route, request.query),
-			next: itemsCount >= take
-				? this.buildUrl(route, {
-					...request.query,
-					skip: skipped + take
-				})
-				: null,
+			next:
+				itemsCount >= take
+					? this.buildUrl(route, {
+							...request.query,
+							skip: skipped + take,
+						})
+					: null,
 			previous: skipped
 				? this.buildUrl(route, {
-					...request.query,
-					skip: Math.max(0, skipped - take)
-				})
+						...request.query,
+						skip: Math.max(0, skipped - take),
+					})
 				: null,
 			page: itemsCount ? currentPage : null,
 		};
@@ -99,7 +101,9 @@ export default class PaginatedResponse<T extends { id: number }> {
 		if (queryParameters.skip == 0) {
 			delete queryParameters.skip;
 		}
-		const builtQueryParameters = new URLSearchParams(queryParameters).toString();
+		const builtQueryParameters = new URLSearchParams(
+			queryParameters,
+		).toString();
 
 		if (builtQueryParameters.length) {
 			return `${route}?${builtQueryParameters}`;

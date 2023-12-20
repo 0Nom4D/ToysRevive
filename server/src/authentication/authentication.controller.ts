@@ -1,13 +1,8 @@
 import AuthenticationService from './authentication.service';
-import {
-	Body,
-	Controller, Post, Request, UseGuards
-} from '@nestjs/common';
+import { Body, Controller, Post, Request, UseGuards } from '@nestjs/common';
 import * as Express from 'express';
 import { LocalAuthGuard } from './local/local-auth.guard';
-import {
-	ApiBody, ApiOperation, ApiTags
-} from '@nestjs/swagger';
+import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { User } from 'src/prisma/models';
 import LoginDTO from './models/login.dto';
 import { UserService } from 'src/user/user.service';
@@ -26,13 +21,13 @@ export default class AuthenticationController {
 		summary: 'Login user',
 	})
 	@ApiBody({
-		type: LoginDTO
+		type: LoginDTO,
 	})
 	@UseGuards(LocalAuthGuard)
 	@Post('login')
 	async login(@Request() request: Express.Request) {
 		return this.authenticationService.login(
-			(request as unknown as { user: User }).user
+			(request as unknown as { user: User }).user,
 		);
 	}
 
@@ -40,7 +35,7 @@ export default class AuthenticationController {
 		summary: 'Register new user',
 	})
 	@ApiBody({
-		type: CreateUserDTO
+		type: CreateUserDTO,
 	})
 	@Post('register')
 	async register(@Body() dto: CreateUserDTO): Promise<AuthedUserResponse> {

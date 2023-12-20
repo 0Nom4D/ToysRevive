@@ -7,7 +7,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import TestPrismaService from 'test/test-prisma.service';
 import SetupApp from 'test/setup-app';
 import { User } from 'src/prisma/models';
-import * as request from "supertest";
+import * as request from 'supertest';
 import { HttpStatus, INestApplication } from '@nestjs/common';
 import { CreateUserDTO } from './user.dto';
 
@@ -19,14 +19,8 @@ describe('UserController', () => {
 
 	beforeAll(async () => {
 		const module: TestingModule = await Test.createTestingModule({
-			imports: [
-				AuthenticationModule,
-				UserModule,
-				PrismaModule,
-			],
-			providers: [
-				PrismaService,
-			],
+			imports: [AuthenticationModule, UserModule, PrismaModule],
+			providers: [PrismaService],
 		})
 			.overrideProvider(PrismaService)
 			.useClass(TestPrismaService)
@@ -36,15 +30,15 @@ describe('UserController', () => {
 	});
 
 	describe('Registration Flow', () => {
-		it("Should create the admin user", () => {
+		it('Should create the admin user', () => {
 			let dto: CreateUserDTO = {
 				phone: '0123456789',
 				email: 'user.first@user.com',
 				lastName: 'First',
 				firstName: 'User',
 				userName: 'userfirst',
-				password: '123456789'
-			}
+				password: '123456789',
+			};
 			return request(app.getHttpServer())
 				.post(`/auth/register`)
 				.send(dto)
@@ -58,19 +52,18 @@ describe('UserController', () => {
 					expect(user1.lastName).toBe('First');
 					expect(user1.userName).toBe('userfirst');
 					expect(user1.id).toBeDefined();
-
-				})
+				});
 		});
 
-		it("Should create the user user", () => {
+		it('Should create the user user', () => {
 			let dto: CreateUserDTO = {
 				phone: '0234567891',
 				email: 'user2.first@user.com',
 				lastName: 'Two',
 				firstName: 'User',
 				userName: 'usertwo',
-				password: '12345678910'
-			}
+				password: '12345678910',
+			};
 			return request(app.getHttpServer())
 				.post(`/auth/register`)
 				.send(dto)
@@ -84,15 +77,14 @@ describe('UserController', () => {
 					expect(user2.userName).toBe('usertwo');
 					expect(user2.password).toBeUndefined();
 					expect(user2.id).toBeDefined();
-
 				});
 		});
 
-		it("Should return an error, as user already exists", () => {
+		it('Should return an error, as user already exists', () => {
 			let dto: CreateUserDTO = {
 				...user1,
-				password: '12345678910'
-			}
+				password: '12345678910',
+			};
 			return request(app.getHttpServer())
 				.post(`/auth/register`)
 				.send(dto)
@@ -102,12 +94,12 @@ describe('UserController', () => {
 				});
 		});
 
-		it("Should return an error, as username is not long enough", () => {
+		it('Should return an error, as username is not long enough', () => {
 			let dto: CreateUserDTO = {
 				...user1,
 				userName: 'a',
-				password: '12345678910'
-			}
+				password: '12345678910',
+			};
 			return request(app.getHttpServer())
 				.post(`/auth/register`)
 				.send(dto)
@@ -117,12 +109,12 @@ describe('UserController', () => {
 				});
 		});
 
-		it("Should return an error, as password is badly formed", () => {
+		it('Should return an error, as password is badly formed', () => {
 			let dto: CreateUserDTO = {
 				...user1,
 				userName: 'blahblahblah',
-				password: '110'
-			}
+				password: '110',
+			};
 			return request(app.getHttpServer())
 				.post(`/auth/register`)
 				.send(dto)
@@ -131,7 +123,7 @@ describe('UserController', () => {
 					expect(res.body.message).toBeDefined();
 				});
 		});
-	})
+	});
 
 	describe('Authentication Flow', () => {
 		it('Should Login and access their information', async () => {
@@ -139,8 +131,8 @@ describe('UserController', () => {
 				.post(`/auth/login`)
 				.send({
 					username: 'userfirst',
-					password: '123456789'
-				})
+					password: '123456789',
+				});
 			expect(loginResponse.statusCode).toBe(HttpStatus.CREATED);
 			user1Token = loginResponse.body.access_token;
 			expect(user1Token).toBeDefined();
@@ -148,38 +140,40 @@ describe('UserController', () => {
 
 			const dataResponse = await request(app.getHttpServer())
 				.get(`/users/me`)
-				.set({ Authorization: `Bearer ${user1Token}` })
+				.set({ Authorization: `Bearer ${user1Token}` });
 			expect(dataResponse.statusCode).toBe(HttpStatus.OK);
 			const data = dataResponse.body;
 			expect(data).toStrictEqual(user1);
 			expect(data.password).toBeUndefined();
-		})
+		});
 
 		it('Should Not Be able to access route (Bad token)', async () => {
 			// Here, Access token will not allow the user to be resolved
-			const token = 'qqqq'
+			const token = 'qqqq';
 			const dataResponse = await request(app.getHttpServer())
 				.get(`/users/me`)
-				.set({ Authorization: `Bearer ${token}` })
+				.set({ Authorization: `Bearer ${token}` });
 			expect(dataResponse.statusCode).toBe(HttpStatus.UNAUTHORIZED);
 			const data = dataResponse.body;
 			expect(data.message).toBe('Bad Access Token');
-		})
+		});
 
 		it('Should Not Be able to access route (No token)', async () => {
 			// Here, User is not defined
-			const dataResponse = await request(app.getHttpServer())
-				.get(`/users/me`)
+			const dataResponse = await request(app.getHttpServer()).get(
+				`/users/me`,
+			);
 			expect(dataResponse.statusCode).toBe(HttpStatus.UNAUTHORIZED);
 			const data = dataResponse.body;
 			expect(data.message).toBeDefined();
-		})
-	})
+		});
+	});
 
 	describe('Get Single User', () => {
 		it('Should Get A User (Unauthentified)', async () => {
-			const dataResponse = await request(app.getHttpServer())
-				.get(`/users/${user2.id}`)
+			const dataResponse = await request(app.getHttpServer()).get(
+				`/users/${user2.id}`,
+			);
 			const data: User = dataResponse.body;
 			expect(data.userName).toBe(user2.userName);
 			expect(data.password).toBeUndefined();
@@ -187,33 +181,34 @@ describe('UserController', () => {
 			expect(data.lastName).toBeUndefined();
 			expect(data.email).toBeUndefined();
 			expect(data.phone).toBeUndefined();
-		})
+		});
 		it('Should Get A User (Authentified)', async () => {
 			const dataResponse = await request(app.getHttpServer())
 				.get(`/users/${user2.id}`)
-				.set({ Authorization: `Bearer ${user1Token}` })
+				.set({ Authorization: `Bearer ${user1Token}` });
 			const data: User = dataResponse.body;
 			expect(data.userName).toBe(user2.userName);
 			expect(data.password).toBeUndefined();
 			expect(data.firstName).toBeDefined();
 			expect(data.email).toBeDefined();
-		})
+		});
 		it('Should Not Get the User (Not Found)', async () => {
-			const dataResponse = await request(app.getHttpServer())
-				.get(`/users/-1`)
+			const dataResponse = await request(app.getHttpServer()).get(
+				`/users/-1`,
+			);
 			expect(dataResponse.statusCode).toBe(HttpStatus.NOT_FOUND);
 			const data = dataResponse.body;
 			expect(data.message).toBeDefined();
-		})
-	})
+		});
+	});
 
 	describe('Get Many Users', () => {
 		it('Should Get Many Users (Unauthentified)', async () => {
-			expect(true).toBe(false)
-		})
+			expect(true).toBe(false);
+		});
 
 		it('Should Get Many Users (Authentified)', async () => {
-			expect(true).toBe(false)
-		})
-	})
+			expect(true).toBe(false);
+		});
+	});
 });

@@ -6,11 +6,7 @@ import { applyMiddlewares } from './app.plugins';
 import { AuthenticationModule } from './authentication/authentication.module';
 
 @Module({
-	imports: [
-		PrismaModule,
-		UserModule,
-		AuthenticationModule
-	],
+	imports: [PrismaModule, UserModule, AuthenticationModule],
 	controllers: [AppController],
 	providers: [],
 })

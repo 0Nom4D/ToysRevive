@@ -9,19 +9,25 @@ import JwtResponse from './models/jwt.response';
 export default class AuthenticationService {
 	constructor(
 		private userService: UserService,
-		private jwtService: JwtService
-	) { }
+		private jwtService: JwtService,
+	) {}
 
-	async validateUser(username: string, plainTextPassword: string): Promise<User> {
+	async validateUser(
+		username: string,
+		plainTextPassword: string,
+	): Promise<User> {
 		try {
 			const requestedUser = await this.userService.getByCredentials({
 				username: username,
-				password: plainTextPassword
+				password: plainTextPassword,
 			});
 
 			return requestedUser;
 		} catch (error) {
-			throw new HttpException('Username or password is incorrect', HttpStatus.NOT_FOUND);
+			throw new HttpException(
+				'Username or password is incorrect',
+				HttpStatus.NOT_FOUND,
+			);
 		}
 	}
 
@@ -29,7 +35,7 @@ export default class AuthenticationService {
 		const payload: JwtPayload = { userName: user.userName, id: user.id };
 
 		return {
-			access_token: this.jwtService.sign(payload)
+			access_token: this.jwtService.sign(payload),
 		};
 	}
 }
