@@ -3,6 +3,7 @@ import LoginDTO from 'src/authentication/models/login.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import * as bcrypt from 'bcrypt';
 import { CreateUserDTO } from './user.dto';
+import { PaginationParameters } from 'src/pagination/models/pagination-parameters';
 
 @Injectable()
 export class UserService {
@@ -30,6 +31,13 @@ export class UserService {
 
 	async getById(id: number) {
 		return this.prismaService.user.findFirstOrThrow({ where: { id: id } });
+	}
+
+	async getMany(pagination: PaginationParameters) {
+		return this.prismaService.user.findMany({
+			take: pagination.take,
+			skip: pagination.skip,
+		});
 	}
 
 	createUser(registrationDTO: CreateUserDTO) {

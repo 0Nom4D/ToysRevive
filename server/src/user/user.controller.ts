@@ -2,23 +2,40 @@ import {
 	Controller,
 	Get,
 	Param,
-	Post,
+	Query,
 	Request,
 	UseGuards,
+	UseInterceptors,
 } from '@nestjs/common';
-import { UpdateUserDTO } from './user.dto';
 import JwtAuthGuard, {
 	OptionalJwtAuthGuard,
 } from 'src/authentication/jwt/jwt-auth.guard';
 import { AuthedUserResponse, PublicUserResponse } from './user.response';
 import { UserService } from './user.service';
+import { PaginationParameters } from 'src/pagination/models/pagination-parameters';
+import { User } from '@prisma/client';
+import { ApiPaginatedResponse } from 'src/pagination/paginated-response.decorator';
+import PaginatedResponseBuilderInterceptor from 'src/interceptors/page-response.interceptor';
 
 @Controller('users')
 export class UserController {
 	constructor(private userService: UserService) {}
 
 	@Get()
-	public getUsers() {}
+	@UseGuards(OptionalJwtAuthGuard)
+	@ApiPaginatedResponse(AuthedUserResponse)
+	@UseInterceptors(PaginatedResponseBuilderInterceptor)
+	public getUsers(
+		@Request() req: any,
+		@Query()
+		paginationParameters: PaginationParameters,
+	) {
+		return this.userService.getMany(paginationParameters).then((users) =>
+			users.map((user) => {
+				return this.filterUserMember(user, req);
+			}),
+		);
+	}
 
 	@Get('me')
 	@UseGuards(JwtAuthGuard)
@@ -28,15 +45,16 @@ export class UserController {
 		return new AuthedUserResponse(await this.userService.getById(userId));
 	}
 
-	@Post('me')
-	@UseGuards(JwtAuthGuard)
-	public updateCurrentUser(updateDTO: UpdateUserDTO) {}
-
 	@Get(':id')
 	@UseGuards(OptionalJwtAuthGuard)
 	public async getUser(@Param('id') id: number, @Request() req: any) {
 		const user = await this.userService.getById(id);
-		const isLoggedin = req.user != null;
+
+		return this.filterUserMember(user, req);
+	}
+
+	private filterUserMember(user: User, request: any) {
+		const isLoggedin = request.user != null;
 
 		if (isLoggedin) {
 			return new AuthedUserResponse(user);

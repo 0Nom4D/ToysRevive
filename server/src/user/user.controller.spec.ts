@@ -204,11 +204,42 @@ describe('UserController', () => {
 
 	describe('Get Many Users', () => {
 		it('Should Get Many Users (Unauthentified)', async () => {
-			expect(true).toBe(false);
+			const dataResponse = await request(app.getHttpServer()).get(
+				`/users`,
+			);
+			const data: User[] = dataResponse.body.items;
+			expect(data[0].id).toEqual(user1.id);
+			expect(data[0].firstName).toBeUndefined();
+			expect(data[1].id).toEqual(user2.id);
+			expect(data[1].phone).toBeUndefined();
 		});
 
 		it('Should Get Many Users (Authentified)', async () => {
-			expect(true).toBe(false);
+			const dataResponse = await request(app.getHttpServer())
+				.get(`/users`)
+				.set({ Authorization: `Bearer ${user1Token}` });
+			const data: User[] = dataResponse.body.items;
+			expect(data[0].id).toEqual(user1.id);
+			expect(data[0].firstName).toEqual(user1.firstName);
+			expect(data[1].id).toEqual(user2.id);
+			expect(data[1].phone).toBeDefined();
+		});
+
+		it('Should Get Many Users (w/ Pagination (Take))', async () => {
+			const dataResponse = await request(app.getHttpServer())
+				.get(`/users?take=1`)
+				.set({ Authorization: `Bearer ${user1Token}` });
+			const data: User[] = dataResponse.body.items;
+			expect(data.length).toBe(1);
+			expect(data[0].id).toEqual(user1.id);
+		});
+		it('Should Get Many Users (w/ Pagination (Skip))', async () => {
+			const dataResponse = await request(app.getHttpServer())
+				.get(`/users?skip=1`)
+				.set({ Authorization: `Bearer ${user1Token}` });
+			const data: User[] = dataResponse.body.items;
+			expect(data.length).toBe(1);
+			expect(data[0].id).toEqual(user2.id);
 		});
 	});
 });
