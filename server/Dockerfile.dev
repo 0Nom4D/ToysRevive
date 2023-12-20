@@ -1,0 +1,15 @@
+FROM node:18-alpine AS base
+
+FROM base
+WORKDIR /app
+COPY ./*.json ./
+COPY ./*.lock ./
+RUN yarn install
+COPY ./prisma ./prisma
+RUN yarn build
+
+CMD yarn							\
+	&& yarn run prisma generate		\
+	&& yarn build					\
+	&& yarn run prisma migrate dev	\
+	&& yarn start:dev

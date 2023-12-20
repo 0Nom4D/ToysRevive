@@ -8,88 +8,78 @@ on:
 
 defaults:
   run:
-    shell: bash
     working-directory: ./server
 
 jobs:
   Build:
     runs-on: ubuntu-latest
+    container: node:18-alpine
     steps:
-      # Needed for Swagger UI
-      - uses: actions/checkout@v4
-      - name: Install needed packages
-        run: sudo apt-get install -y pkg-config
-      - uses: ./.github/actions/install-stack
-      - uses: freckle/stack-cache-action@v2
-        with:
-          working-directory: server
-      - name: Compile Project
-        run: stack build
+      - name: Check out the repo
+        uses: actions/checkout@v4
+      - name: Install dependencies
+        run: yarn install
+      - name: Generate Prisma Classes
+        run: yarn run prisma generate
+      - name: Build
+        run: yarn build
   Lint:
     runs-on: ubuntu-latest
     needs: [ Build ]
+    container: node:18-alpine
     steps:
       - uses: actions/checkout@v4
-      - uses: freckle/stack-cache-action@v2
-        with:
-          working-directory: server
-      - name: Setup & Run HLint
-        run: curl -sSL https://raw.github.com/ndmitchell/hlint/master/misc/run.sh | sh -s src app
-  Fourmolu:
-    name: Code Format
+      - name: Install dependencies
+        run: yarn install
+      - name: Run Linter
+        run: yarn lint
+  Prettier:
     runs-on: ubuntu-latest
     needs: [ Build ]
+    container: node:18-alpine
     steps:
       - uses: actions/checkout@v4
-      - uses: haskell-actions/run-fourmolu@v9
-        with:
-          version: "0.14.1.0"
-          pattern: server/**/*.hs
-  UTests:
+      - name: Install dependencies
+        run: yarn install
+      - name: Run Linter
+        run: yarn format --check
+  Tests:
     name: Unit Tests
     runs-on: ubuntu-latest
+    container: node:18-alpine
     needs: [ Build ]
+    services:
+      postgres:
+        image: postgres:alpine3.16
+        env:
+          POSTGRES_USER: test
+          POSTGRES_PASSWORD: test
+          POSTGRES_DB: test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    env:
+      NODE_OPTIONS: "--max_old_space_size=4096"
+      DATABASE_URL: "postgresql://test:test@postgres:5432/test?schema=public"
+      JWT_SIGNATURE: "12345"
     steps:
       - uses: actions/checkout@v4
-      - uses: freckle/stack-cache-action@v2
-        with:
-          working-directory: server
-      - name: Install Coverage utility
-        run: stack install hpc-codecov
-      - name: Run unit tests
-        run: stack test --coverage
-      - name: Process Coverage report
-        run: hpc-codecov stack:all -o codecov.json
+      - name: Install test dependencies
+        run: yarn install
+      - name: Migrate DB Schema
+        run: yarn run prisma migrate dev
+      - name: Run unit tests with coverage
+        run: yarn test --coverage --ci --no-cache --maxConcurrency=1 --forceExit
       - name: Upload coverage reports to Codecov
         if: ${{ always() }}
         uses: codecov/codecov-action@v3
         with:
-          files: ./server/codecov.json
+          directory: ./server/coverage
           flags: server
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-  RTests:
-    name: Robot Tests
-    runs-on: ubuntu-latest
-    needs: [ Build ]
-    steps:
-      - uses: actions/checkout@v4
-      - uses: freckle/stack-cache-action@v2
-        with:
-          working-directory: server
-      - name: Setup Robot
-        run: pip install -r robot/requirements.txt
-      - name: Compile Project
-        run: stack build
-      - name: Run Tests
-        # TODO: Later on, we will need to setup a database, using a docker-compose
-        run: (stack run &) ; sleep 10 ; robot -d test-out robot/
-      - name: Write results to Pull Request and Summary
-        if: always()
-        uses: joonvena/robotframework-reporter-action@v2.1
-        with:
-          report_path: server/test-out/
-          gh_access_token: ${{ secrets.GITHUB_TOKEN }}
-          # True if not triggered by a PR
-          only_summary: ${{ github.event_name != 'pull_request' }}
 
