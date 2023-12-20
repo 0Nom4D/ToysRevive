@@ -9,6 +9,7 @@ COPY ./prisma ./prisma
 RUN yarn build
 
 CMD yarn							\
+	&& yarn run prisma generate		\
 	&& yarn build					\
 	&& yarn run prisma migrate dev	\
 	&& yarn start:dev

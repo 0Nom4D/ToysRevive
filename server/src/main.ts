@@ -7,9 +7,9 @@ async function bootstrap() {
 	const app = await NestFactory.create(AppModule);
 
 	app.useGlobalFilters(...Plugins.buildExceptionFilters(app))
-		.useGlobalPipes(...Plugins.buildPipes(app))
-		.useGlobalInterceptors(...Plugins.buildInterceptors(app))
-		.use(...Plugins.buildHttpPlugs(app));
+	app.useGlobalPipes(...Plugins.buildPipes(app))
+	app.useGlobalInterceptors(...Plugins.buildInterceptors(app))
+	app.use(...Plugins.buildHttpPlugs(app));
 	await app.listen(3000);
 }
 

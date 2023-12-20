@@ -1,24 +1,26 @@
 import {
-	ArgumentsHost, Catch, HttpStatus, Logger
+	ArgumentsHost, Catch, HttpException, HttpStatus, Logger
 } from '@nestjs/common';
 import { BaseExceptionFilter } from '@nestjs/core';
 import type { Response } from 'express';
 
 @Catch()
 export default class AllExceptionsFilter extends BaseExceptionFilter {
-	catch(exception: any, host: ArgumentsHost) {
+	catch(exception: Error, host: ArgumentsHost) {
 		const logger = new Logger();
 		const ctx = host.switchToHttp();
 		const response = ctx.getResponse<Response>();
 
-		if (exception.code === 'ENOENT') {
+		if (exception instanceof HttpException) {
+			const httpException = exception as HttpException;
+
 			response
-				.status(HttpStatus.NOT_FOUND)
+				.status(httpException.getStatus())
 				.json({
-					statusCode: HttpStatus.NOT_FOUND,
-					message: "Not found."
+					statusCode: httpException.getStatus(),
+					message: httpException.message,
 				});
-		} else {
+		}  else {
 			logger.error(exception);
 			response
 				.status(HttpStatus.INTERNAL_SERVER_ERROR)

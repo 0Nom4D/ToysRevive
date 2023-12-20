@@ -1,7 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import LoginDTO from 'src/authentication/models/login.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import * as bcrypt from 'bcrypt';
+import { CreateUserDTO } from './user.dto';
 
 @Injectable()
 export class UserService {
@@ -13,11 +14,32 @@ export class UserService {
 		return bcrypt.hashSync(plainTextPassword, this.passwordHashSaltRound);
 	}
 
-	getByCredentials(loginDto: LoginDTO) {
-		return this.prismaService.user.findFirstOrThrow({
-			where: {
-				userName: loginDto.username,
-				password: this.encryptPassword(loginDto.password)
+	async getByCredentials(loginDto: LoginDTO) {
+		const user = await this.prismaService.user.findFirstOrThrow(
+			{ where: { userName: loginDto.username } }
+		);
+
+		if (!bcrypt.compareSync(loginDto.password, user.password)) {
+			throw new HttpException('Username or password is incorrect', HttpStatus.NOT_FOUND);
+		}
+		return user;
+	}
+
+	async getById(id: number) {
+		return this.prismaService.user.findFirstOrThrow(
+			{ where: { id: id } }
+		);
+	}
+
+	createUser(registrationDTO: CreateUserDTO) {
+		return this.prismaService.user.create({
+			data: {
+				phone: registrationDTO.phone,
+				userName: registrationDTO.userName,
+				email: registrationDTO.email,
+				firstName: registrationDTO.firstName,
+				lastName: registrationDTO.lastName,
+				password: this.encryptPassword(registrationDTO.password)
 			}
 		})
 	}

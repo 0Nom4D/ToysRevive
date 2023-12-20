@@ -6,6 +6,8 @@ import AuthenticationController from './authentication.controller';
 import AuthenticationService from './authentication.service';
 import { JwtStrategy } from './jwt/jwt.strategy';
 import LocalStrategy from './local/local.strategy';
+import { APP_GUARD } from '@nestjs/core';
+import JwtAuthGuard from './jwt/jwt-auth.guard';
 
 @Module({
 	imports: [

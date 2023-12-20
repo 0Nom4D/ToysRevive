@@ -6,8 +6,8 @@ export default async function SetupApp(module: TestingModule): Promise<INestAppl
 	const app = module.createNestApplication();
 
 	app.useGlobalFilters(...buildExceptionFilters(app))
-		.useGlobalPipes(...buildPipes(app))
-		.useGlobalInterceptors(...buildInterceptors(app))
-		.use(...buildHttpPlugs(app));
+	app.useGlobalPipes(...buildPipes(app))
+	app.useGlobalInterceptors(...buildInterceptors(app))
+	app.use(...buildHttpPlugs(app));
 	return app.init();
 }

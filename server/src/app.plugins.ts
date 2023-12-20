@@ -19,6 +19,7 @@ import { JwtCookieMiddleware } from "./authentication/jwt/jwt-middleware";
 import JwtAuthGuard from "./authentication/jwt/jwt-auth.guard";
 import AllExceptionsFilter from "./exceptions/all-exceptions.filter";
 import PrismaExceptionsFilter from "./exceptions/prisma.filter";
+import NotFoundExceptionFilter from "./exceptions/not-found.exception";
 
 // To call before application bootstrap/launch
 const presetup = () => {
@@ -31,7 +32,8 @@ const buildInterceptors = (app: INestApplication) => [
 
 const buildExceptionFilters = (app: INestApplication) => [
 	new AllExceptionsFilter(app.get(HttpAdapterHost)),
-	new PrismaExceptionsFilter(app.get(HttpAdapterHost)),
+	new NotFoundExceptionFilter(),
+	new PrismaExceptionsFilter(),
 ];
 
 const buildPipes = (_app: INestApplication) => [
@@ -65,15 +67,8 @@ const applyMiddlewares = (consumer: MiddlewareConsumer) => consumer
 	.apply(JwtCookieMiddleware)
 	.forRoutes({ path: '*', method: RequestMethod.ALL });
 
-const AppProviders = [
-	{
-		provide: APP_GUARD,
-		useClass: JwtAuthGuard,
-	}
-];
 
 export {
 	presetup, buildInterceptors, applyMiddlewares,
-	buildPipes, buildExceptionFilters, buildHttpPlugs,
-	AppProviders
+	buildPipes, buildExceptionFilters, buildHttpPlugs
 };

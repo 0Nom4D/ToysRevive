@@ -48,7 +48,7 @@ model User {
 	/// @description the hashed password of the user\'s account
 	password		  String
   /// @description the phone number of the user
-	phone		      String
+	phone		      String  @unique
   /// @description the email address of th user
 	email		      String  @unique
 	@@map("users")

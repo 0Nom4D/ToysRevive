@@ -18,4 +18,7 @@ CREATE UNIQUE INDEX "users_lastName_key" ON "users"("lastName");
 CREATE UNIQUE INDEX "users_userName_key" ON "users"("userName");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "users_phone_key" ON "users"("phone");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "users_email_key" ON "users"("email");
