@@ -51,7 +51,7 @@ model User {
   /// @description The hashed password of the User\'s account
   password  String
   /// @description The phone number of the User
-  /// @example 0123456789
+  /// @example "0123456789"
   phone     String @unique
   /// @description The email address of th User
   /// @example john.doe@mail.com

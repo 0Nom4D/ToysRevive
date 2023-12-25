@@ -16,12 +16,17 @@ import { PaginationParameters } from 'src/pagination/models/pagination-parameter
 import { User } from '@prisma/client';
 import { ApiPaginatedResponse } from 'src/pagination/paginated-response.decorator';
 import PaginatedResponseBuilderInterceptor from 'src/interceptors/page-response.interceptor';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Users')
 @Controller('users')
 export class UserController {
 	constructor(private userService: UserService) {}
 
 	@Get()
+	@ApiOperation({
+		summary: 'Get Many Users user',
+	})
 	@UseGuards(OptionalJwtAuthGuard)
 	@ApiPaginatedResponse(AuthedUserResponse)
 	@UseInterceptors(PaginatedResponseBuilderInterceptor)
@@ -38,6 +43,9 @@ export class UserController {
 	}
 
 	@Get('me')
+	@ApiOperation({
+		summary: 'Get Profile of the currently authentified user',
+	})
 	@UseGuards(JwtAuthGuard)
 	public async getCurrentUser(@Request() req: any) {
 		const userId: number = req.user.id;
@@ -46,8 +54,14 @@ export class UserController {
 	}
 
 	@Get(':id')
+	@ApiOperation({
+		summary: 'Get A Profile from a User ID',
+	})
 	@UseGuards(OptionalJwtAuthGuard)
-	public async getUser(@Param('id') id: number, @Request() req: any) {
+	public async getUser(
+		@Param('id') id: number,
+		@Request() req: any,
+	): Promise<PublicUserResponse> {
 		const user = await this.userService.getById(id);
 
 		return this.filterUserMember(user, req);
