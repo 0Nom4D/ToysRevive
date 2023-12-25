@@ -2,9 +2,9 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
-  engineType = "binary"
-	binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
+  provider      = "prisma-client-js"
+  engineType    = "binary"
+  binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
 }
 
 datasource db {
@@ -36,20 +36,26 @@ generator classes {
 /////// Models
 
 model User {
-	/// @description Unique numeric user identifier
-	/// @example 123
-	id				Int		@id @default(autoincrement())
-	/// @description the last name of the user
-	lastName			String	@unique
-  /// @description the first name of the user
-	firstName			String
-  /// @description the username
-	userName			String	@unique
-	/// @description the hashed password of the user\'s account
-	password		  String
-  /// @description the phone number of the user
-	phone		      String  @unique
-  /// @description the email address of th user
-	email		      String  @unique
-	@@map("users")
+  /// @description Unique numeric user identifier
+  /// @example 123
+  id        Int    @id @default(autoincrement())
+  /// @description The last name of the User
+  /// @example Doe
+  lastName  String
+  /// @description The first name of the User
+  /// @example John
+  firstName String
+  /// @description The username
+  /// @example johnDoe44
+  userName  String @unique
+  /// @description The hashed password of the User\'s account
+  password  String
+  /// @description The phone number of the User
+  /// @example 0123456789
+  phone     String @unique
+  /// @description The email address of th User
+  /// @example john.doe@mail.com
+  email     String @unique
+
+  @@map("users")
 }
