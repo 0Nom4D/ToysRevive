@@ -6,16 +6,16 @@ import {
 	IsString,
 	MinLength,
 } from 'class-validator';
-import { IntersectionType, PartialType } from '@nestjs/mapped-types';
+import { PartialType } from '@nestjs/mapped-types';
 import { CreateUser } from 'src/prisma/models';
 
-export class CreateUserDTO extends IntersectionType(CreateUser) {
+export class CreateUserDTO extends CreateUser {
 	@MinLength(6)
 	userName: string;
 	@MinLength(7)
 	password: string;
 	@ApiProperty({
-		description: 'the phone number of the user',
+		description: 'The phone number of the User',
 		example: '0123456789',
 	})
 	@IsNotEmpty()
@@ -24,7 +24,7 @@ export class CreateUserDTO extends IntersectionType(CreateUser) {
 	phone!: string;
 
 	@ApiProperty({
-		description: "the hashed password of the user's account",
+		description: 'The Email of the User',
 	})
 	@IsNotEmpty()
 	@IsEmail()
