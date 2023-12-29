@@ -2,6 +2,7 @@ import {
 	Controller,
 	Get,
 	Param,
+	ParseIntPipe,
 	Query,
 	Request,
 	UseGuards,
@@ -59,7 +60,7 @@ export class UserController {
 	})
 	@UseGuards(OptionalJwtAuthGuard)
 	public async getUser(
-		@Param('id') id: number,
+		@Param('id', ParseIntPipe) id: number,
 		@Request() req: any,
 	): Promise<PublicUserResponse> {
 		const user = await this.userService.getById(id);

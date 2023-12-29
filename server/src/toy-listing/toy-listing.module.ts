@@ -7,6 +7,6 @@ import { PrismaModule } from 'src/prisma/prisma.module';
 	imports: [PrismaModule],
 	providers: [ToyListingService],
 	controllers: [ToyListingController],
-	exports: [ToyListingService]
+	exports: [ToyListingService],
 })
 export class ToyListingModule {}

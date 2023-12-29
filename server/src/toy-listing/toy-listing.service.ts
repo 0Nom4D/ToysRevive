@@ -11,7 +11,10 @@ export class ToyListingService {
 	async getMany(
 		where: Partial<Omit<ToyListing, 'id'>>,
 		pagination: PaginationParameters,
-		sortBy?: { sortBy: Prisma.ToyListingScalarFieldEnum, order: Prisma.SortOrder }
+		sortBy?: {
+			sortBy: Prisma.ToyListingScalarFieldEnum;
+			order: Prisma.SortOrder;
+		},
 	) {
 		return this.prismaService.toyListing.findMany({
 			where: where,
