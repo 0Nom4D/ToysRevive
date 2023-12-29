@@ -91,6 +91,9 @@ model ToyListing {
   /// @description The title of the listing
   /// @example Silent Hill 4 - PlayStation 2 With Booklet
   title     String
+   /// @description A short text about the listed item
+  /// @example Working, in good condition. Some light scratches
+  description     String
   /// @description The condition of the listed toy
   condition Condition
   /// @description The condition of the listed toy

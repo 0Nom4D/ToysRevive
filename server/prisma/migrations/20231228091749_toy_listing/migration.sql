@@ -8,6 +8,7 @@ CREATE TYPE "toy_type" AS ENUM ('Plastic', 'Wood', 'Dinosaur', 'Car', 'VideoGame
 CREATE TABLE "toy_offers" (
     "id" SERIAL NOT NULL,
     "title" TEXT NOT NULL,
+    "description" TEXT NOT NULL,
     "condition" "condition" NOT NULL,
     "type" "toy_type" NOT NULL,
     "ownerId" INTEGER NOT NULL,
