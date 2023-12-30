@@ -1,5 +1,4 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { UserController } from './user.controller';
 import { AuthenticationModule } from 'src/authentication/authentication.module';
 import { PrismaModule } from 'src/prisma/prisma.module';
 import { UserModule } from './user.module';

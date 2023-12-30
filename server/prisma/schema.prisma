@@ -38,24 +38,74 @@ generator classes {
 model User {
   /// @description Unique numeric user identifier
   /// @example 123
-  id        Int    @id @default(autoincrement())
+  id         Int          @id @default(autoincrement())
   /// @description The last name of the User
   /// @example Doe
-  lastName  String
+  lastName   String
   /// @description The first name of the User
   /// @example John
-  firstName String
+  firstName  String
   /// @description The username
   /// @example johnDoe44
-  userName  String @unique
+  userName   String       @unique
   /// @description The hashed password of the User\'s account
-  password  String
+  password   String
   /// @description The phone number of the User
   /// @example "0123456789"
-  phone     String @unique
+  phone      String       @unique
   /// @description The email address of th User
   /// @example john.doe@mail.com
-  email     String @unique
+  email      String       @unique
+  ToyListing ToyListing[]
 
   @@map("users")
+}
+
+enum Condition {
+  New
+  VeryGood
+  Good
+  Acceptable
+  Bad
+
+  @@map("condition")
+}
+
+enum ToyType {
+  Plastic
+  Wood
+  Dinosaur
+  Car
+  VideoGame
+  ConstructionToy
+  BoardGame
+  Other
+
+  @@map("toy_type")
+}
+
+model ToyListing {
+  /// @description Unique numeric offer identifier
+  /// @example 123
+  id        Int       @id @default(autoincrement())
+  /// @description The title of the listing
+  /// @example Silent Hill 4 - PlayStation 2 With Booklet
+  title     String
+   /// @description A short text about the listed item
+  /// @example Working, in good condition. Some light scratches
+  description     String
+  /// @description The condition of the listed toy
+  condition Condition
+  /// @description The condition of the listed toy
+  type      ToyType
+  /// @description The Owner of the Listing
+  owner     User      @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  ownerId   Int
+  /// @description Post Code of the Toy\'s location
+  /// @example 44000
+  postCode  Int
+  /// @description Date of the listing\'s creation
+  addDate   DateTime  @default(now())
+
+  @@map("toy_offers")
 }
