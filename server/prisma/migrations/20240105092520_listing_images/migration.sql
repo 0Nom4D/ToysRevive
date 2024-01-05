@@ -1,6 +1,7 @@
 -- CreateTable
 CREATE TABLE "images" (
     "id" SERIAL NOT NULL,
+    "blurhash" TEXT NOT NULL,
     "listingId" INTEGER NOT NULL,
 
     CONSTRAINT "images_pkey" PRIMARY KEY ("id")

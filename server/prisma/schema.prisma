@@ -116,6 +116,9 @@ model ListingImage {
   /// @description Unique numeric offer identifier
   /// @example 123
   id        Int       @id @default(autoincrement())
+  /// @description Blurhash of the image.
+  /// @example LEHV6nWB2yk8pyo0adR*.7kCMdnj
+  blurhash  String
   /// @description The Parent Listing
   listing   ToyListing @relation(fields: listingId, references: [id], onDelete: Cascade)
   listingId Int

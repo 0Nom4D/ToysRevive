@@ -21,12 +21,14 @@ export class ToyListingService {
 			orderBy: sortBy ? { [sortBy.sortBy]: sortBy.order } : {},
 			take: pagination.take,
 			skip: pagination.skip,
+			include: { images: true }
 		});
 	}
 
 	async get(id: number) {
 		return this.prismaService.toyListing.findFirstOrThrow({
 			where: { id },
+			include: { images: true }
 		});
 	}
 

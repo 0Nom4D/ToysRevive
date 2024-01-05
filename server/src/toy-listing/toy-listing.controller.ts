@@ -23,10 +23,12 @@ import { ApiPaginatedResponse } from 'src/pagination/paginated-response.decorato
 import {
 	CreateToyListing,
 	ToyListing,
+	ToyListingWithRelations,
 	UpdateToyListing,
 } from 'src/prisma/models';
 import { ToyListingService } from './toy-listing.service';
 import { IsEnum, IsNumber, IsOptional } from 'class-validator';
+import { ToyListingResponse } from './toy-listing.response';
 
 class QueryParameters {
 	@ApiPropertyOptional({
@@ -76,7 +78,7 @@ export class ToyListingController {
 	@ApiOperation({
 		summary: 'Get Many Listings',
 	})
-	@ApiPaginatedResponse(ToyListing)
+	@ApiPaginatedResponse(ToyListingResponse)
 	@UseInterceptors(PaginatedResponseBuilderInterceptor)
 	public getListings(
 		@Query()
@@ -87,7 +89,10 @@ export class ToyListingController {
 		return this.toyListingService.getMany(
 			selector ?? {},
 			paginationParameters,
-			{ sortBy: sort.sortBy ?? 'addDate', order: sort.order ?? 'desc' },
+			{
+				sortBy: sort.sortBy ?? 'addDate',
+				order: sort.order ?? 'desc',
+			},
 		);
 	}
 
@@ -97,7 +102,7 @@ export class ToyListingController {
 	})
 	public getListing(
 		@Param('id', ParseIntPipe) id: number,
-	): Promise<ToyListing> {
+	): Promise<ToyListingResponse> {
 		return this.toyListingService.get(id);
 	}
 

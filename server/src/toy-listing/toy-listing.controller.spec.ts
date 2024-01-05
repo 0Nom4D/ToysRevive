@@ -16,6 +16,11 @@ import {
 	UpdateToyListing,
 } from 'src/prisma/models';
 
+const exceptedListingResponse = (response: ToyListing) => ({
+	...response,
+	images: []
+})
+
 describe('ToyListing Controller', () => {
 	let user1: User;
 	let user1Listing: ToyListing;
@@ -154,7 +159,7 @@ describe('ToyListing Controller', () => {
 				.get(`/listings/${user1Listing.id}`)
 				.expect(HttpStatus.OK)
 				.expect((res) => {
-					expect(res.body).toStrictEqual(user1Listing);
+					expect(res.body).toStrictEqual(exceptedListingResponse(user1Listing));
 				});
 		});
 		it('Should Get A Listing (Authentified, not Owner)', () => {
@@ -163,7 +168,7 @@ describe('ToyListing Controller', () => {
 				.set({ Authorization: `Bearer ${user1Token}` })
 				.expect(HttpStatus.OK)
 				.expect((res) => {
-					expect(res.body).toStrictEqual(user2Listing);
+					expect(res.body).toStrictEqual(exceptedListingResponse(user2Listing));
 				});
 		});
 		it('Should fail, as the listing does not exist', () => {
@@ -185,8 +190,8 @@ describe('ToyListing Controller', () => {
 					const listings: ToyListing[] = res.body.items;
 
 					expect(listings.length).toBe(2);
-					expect(listings.at(0)).toStrictEqual(user2Listing);
-					expect(listings.at(1)).toStrictEqual(user1Listing);
+					expect(listings.at(0)).toStrictEqual(exceptedListingResponse(user2Listing));
+					expect(listings.at(1)).toStrictEqual(exceptedListingResponse(user1Listing));
 				});
 		});
 		it('Should Get All listings, except the first', () => {
@@ -198,7 +203,7 @@ describe('ToyListing Controller', () => {
 
 					expect(listings.length).toBe(1);
 					// By default, items should be sorted by date, descending.
-					expect(listings[0]).toStrictEqual(user1Listing);
+					expect(listings[0]).toStrictEqual(exceptedListingResponse(user1Listing));
 				});
 		});
 		it('Should Sort Listings By Name (Desc)', () => {
@@ -209,8 +214,8 @@ describe('ToyListing Controller', () => {
 					const listings: ToyListing[] = res.body.items;
 
 					expect(listings.length).toBe(2);
-					expect(listings.at(0)).toStrictEqual(user1Listing);
-					expect(listings.at(1)).toStrictEqual(user2Listing);
+					expect(listings.at(0)).toStrictEqual(exceptedListingResponse(user1Listing));
+					expect(listings.at(1)).toStrictEqual(exceptedListingResponse(user2Listing));
 				});
 		});
 		it('Should Filter Listings By Condition', () => {
@@ -221,7 +226,7 @@ describe('ToyListing Controller', () => {
 					const listings: ToyListing[] = res.body.items;
 
 					expect(listings.length).toBe(1);
-					expect(listings[0]).toStrictEqual(user2Listing);
+					expect(listings[0]).toStrictEqual(exceptedListingResponse(user2Listing));
 				});
 		});
 		it('Should Filter Listings By Type', () => {
@@ -232,7 +237,7 @@ describe('ToyListing Controller', () => {
 					const listings: ToyListing[] = res.body.items;
 
 					expect(listings.length).toBe(1);
-					expect(listings[0]).toStrictEqual(user1Listing);
+					expect(listings[0]).toStrictEqual(exceptedListingResponse(user1Listing));
 				});
 		});
 		it('Should Get Listings By Owner', () => {
@@ -243,7 +248,7 @@ describe('ToyListing Controller', () => {
 					const listings: ToyListing[] = res.body.items;
 
 					expect(listings.length).toBe(1);
-					expect(listings[0]).toStrictEqual(user2Listing);
+					expect(listings[0]).toStrictEqual(exceptedListingResponse(user2Listing));
 				});
 		});
 	});
