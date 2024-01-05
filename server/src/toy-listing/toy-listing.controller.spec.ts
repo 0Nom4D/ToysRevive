@@ -15,6 +15,7 @@ import {
 	ToyListing,
 	UpdateToyListing,
 } from 'src/prisma/models';
+import { ImagesModule } from 'src/image/image.module';
 
 const exceptedListingResponse = (response: ToyListing) => ({
 	...response,
@@ -37,6 +38,7 @@ describe('ToyListing Controller', () => {
 			imports: [
 				AuthenticationModule,
 				UserModule,
+				ImagesModule,
 				PrismaModule,
 				ToyListingModule,
 			],

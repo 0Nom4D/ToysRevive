@@ -23,7 +23,6 @@ import { ApiPaginatedResponse } from 'src/pagination/paginated-response.decorato
 import {
 	CreateToyListing,
 	ToyListing,
-	ToyListingWithRelations,
 	UpdateToyListing,
 } from 'src/prisma/models';
 import { ToyListingService } from './toy-listing.service';
