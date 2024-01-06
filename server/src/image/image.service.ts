@@ -8,10 +8,8 @@ import { ListingImage } from 'src/prisma/models';
 import { PrismaService } from 'src/prisma/prisma.service';
 import * as Jimp from 'jimp';
 import * as Blurhash from 'blurhash';
-import { existsSync, mkdirSync, rm } from 'fs';
+import { createReadStream, existsSync, mkdirSync, rm } from 'fs';
 import { basename } from 'path';
-import * as mime from 'mime';
-import { Readable } from 'stream';
 
 @Injectable()
 export class ImageService {
@@ -72,18 +70,14 @@ export class ImageService {
 				imagePath,
 			)}"`,
 		});
-
-		return Jimp.read(imagePath)
-			.then((jimpImage) =>
-				jimpImage.getBufferAsync(mime.getType(imagePath)),
-			)
-			.then((buffer) => new StreamableFile(Readable.from(buffer)))
-			.catch(() => {
-				throw new HttpException(
-					'An error occured while processing the image',
-					HttpStatus.INTERNAL_SERVER_ERROR,
-				);
-			});
+		try {
+			return new StreamableFile(createReadStream(imagePath));
+		} catch {
+			throw new HttpException(
+				'An error occured while processing the image',
+				HttpStatus.INTERNAL_SERVER_ERROR,
+			);
+		}
 	}
 
 	async deleteImage(imageId: number): Promise<ListingImage> {

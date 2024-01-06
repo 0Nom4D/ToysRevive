@@ -9,6 +9,7 @@ import {
 	ParseIntPipe,
 	Post,
 	Request,
+	Response,
 	UploadedFile,
 	UseGuards,
 	UseInterceptors,
@@ -33,9 +34,9 @@ export class ImageController {
 	})
 	public getListingImage(
 		@Param('id', ParseIntPipe) id: number,
-		@Request() req: any,
+		@Response({ passthrough: true }) res: any,
 	) {
-		return this.imageService.streamImage(id, req);
+		return this.imageService.streamImage(id, res);
 	}
 
 	@Post(':listingId')
@@ -50,10 +51,7 @@ export class ImageController {
 		@UploadedFile(
 			new ParseFilePipeBuilder()
 				.addFileTypeValidator({
-					fileType: 'jpeg',
-				})
-				.addFileTypeValidator({
-					fileType: 'png',
+					fileType: /(png|jpeg|jpg)$/i,
 				})
 				.build({
 					errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY,
@@ -61,7 +59,7 @@ export class ImageController {
 		)
 		file: Express.Multer.File,
 	) {
-		const parentListing = await this.toyListingService.getParentListing(id);
+		const parentListing = await this.toyListingService.get(id);
 		const authedUserId = req.user.id;
 
 		if (parentListing.ownerId !== authedUserId) {
