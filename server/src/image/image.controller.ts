@@ -14,11 +14,12 @@ import {
 	UseInterceptors,
 } from '@nestjs/common';
 import { ImageService } from './image.service';
-import { ApiOperation } from '@nestjs/swagger';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { ToyListingService } from 'src/toy-listing/toy-listing.service';
 import JwtAuthGuard from 'src/authentication/jwt/jwt-auth.guard';
 import { FileInterceptor } from '@nestjs/platform-express';
 
+@ApiTags('Images')
 @Controller('images')
 export class ImageController {
 	constructor(
