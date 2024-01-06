@@ -12,6 +12,7 @@ services:
        condition: service_healthy
     volumes:
       - ./server/src:/app/src
+      - ./server/data:/app/data
       - ./server/prisma:/app/prisma
       - ./server/test:/app/test
       - ./server/package.json:/app/package.json

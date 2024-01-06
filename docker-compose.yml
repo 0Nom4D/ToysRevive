@@ -16,6 +16,8 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
+    volumes:
+      - server_data:/app/data
   db:
     image: postgres:alpine3.14
     healthcheck:
@@ -29,3 +31,4 @@ services:
       - db:/var/lib/postgresql/data
 volumes:
   db:
+  server_data:
