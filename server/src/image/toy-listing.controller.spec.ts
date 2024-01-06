@@ -60,27 +60,29 @@ describe('Image Controller', () => {
 			password: 'MyPassword2',
 			phone: '0223456789',
 		});
-		user1Token = (await request(app.getHttpServer())
-				.post(`/auth/login`)
+		user1Token = (
+			await request(app.getHttpServer()).post(`/auth/login`).send({
+				username: 'firstName',
+				password: 'MyPassword',
+			})
+		).body.access_token;
+		user2Token = (
+			await request(app.getHttpServer()).post(`/auth/login`).send({
+				username: 'secondLast',
+				password: 'MyPassword2',
+			})
+		).body.access_token;
+		user1Listing = (
+			await request(app.getHttpServer())
+				.post(`/listings`)
+				.set({ Authorization: `Bearer ${user1Token}` })
 				.send({
-					username: 'firstName',
-					password: 'MyPassword',
-				})).body.access_token;
-		user2Token = (await request(app.getHttpServer())
-		.post(`/auth/login`)
-		.send({
-			username: 'secondLast',
-			password: 'MyPassword2',
-		})).body.access_token;
-		user1Listing = (await request(app.getHttpServer())
-		.post(`/listings`)
-		.set({ Authorization: `Bearer ${user1Token}` })
-		.send({
-			condition: 'Good',
-			title: 'Silent Hill 2 - PS2 Game with Box and Booklet',
-			description: 'Working Game. Some light scratches.',
-			type: 'VideoGame',
-			postCode: 75000,
-		} satisfies CreateToyListing)).body
+					condition: 'Good',
+					title: 'Silent Hill 2 - PS2 Game with Box and Booklet',
+					description: 'Working Game. Some light scratches.',
+					type: 'VideoGame',
+					postCode: 75000,
+				} satisfies CreateToyListing)
+		).body;
 	});
 });
