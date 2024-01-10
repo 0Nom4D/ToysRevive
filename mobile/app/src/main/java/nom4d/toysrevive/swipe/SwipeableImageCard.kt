@@ -122,7 +122,7 @@ fun SwipeableImageCard(
                         onLikeButtonClicked = {
                             scope.launch {
                                 state.swipe(Direction.Right)
-                                view.performHapticFeedback(HapticFeedbackConstants.REJECT)
+                                view.performHapticFeedback(HapticFeedbackConstants.CONFIRM)
                             }
                         }
                     )

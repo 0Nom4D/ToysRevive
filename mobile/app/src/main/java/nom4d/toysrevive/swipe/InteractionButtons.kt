@@ -5,13 +5,16 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.CircleShape
+
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedButton
+
 import androidx.compose.runtime.Composable
+
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -25,7 +28,7 @@ fun InteractionButtons(onLikeButtonClicked: () -> Unit, onDislikeButtonClicked: 
         modifier = Modifier.fillMaxWidth()
     ) {
         OutlinedButton(
-            onClick = { onLikeButtonClicked() },
+            onClick = { onDislikeButtonClicked() },
             shape = CircleShape,
             border = BorderStroke(1.dp, Color.Red),
             colors = ButtonDefaults.outlinedButtonColors(
@@ -39,7 +42,7 @@ fun InteractionButtons(onLikeButtonClicked: () -> Unit, onDislikeButtonClicked: 
             )
         }
         OutlinedButton(
-            onClick = { onDislikeButtonClicked() },
+            onClick = { onLikeButtonClicked() },
             shape = CircleShape,
             border = BorderStroke(1.dp, Color.Green),
             colors = ButtonDefaults.outlinedButtonColors(
