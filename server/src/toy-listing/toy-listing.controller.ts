@@ -82,6 +82,8 @@ export class ToyListingController {
 	@ApiOperation({
 		summary: 'Get Many Listings',
 	})
+	@ApiBearerAuth()
+	@UseGuards(JwtAuthGuard)
 	@ApiPaginatedResponse(ToyListingResponse)
 	@UseInterceptors(PaginatedResponseBuilderInterceptor)
 	public getListings(
@@ -104,6 +106,8 @@ export class ToyListingController {
 	@ApiOperation({
 		summary: 'Get A Single Listing',
 	})
+	@ApiBearerAuth()
+	@UseGuards(JwtAuthGuard)
 	public getListing(
 		@Param('id', ParseIntPipe) id: number,
 	): Promise<ToyListingResponse> {

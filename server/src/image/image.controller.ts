@@ -29,9 +29,11 @@ export class ImageController {
 	) {}
 
 	@Get(':id')
+	@ApiBearerAuth()
 	@ApiOperation({
 		summary: 'Get A Single Image',
 	})
+	@UseGuards(JwtAuthGuard)
 	public getListingImage(
 		@Param('id', ParseIntPipe) id: number,
 		@Response({ passthrough: true }) res: any,

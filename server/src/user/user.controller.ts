@@ -8,9 +8,7 @@ import {
 	UseGuards,
 	UseInterceptors,
 } from '@nestjs/common';
-import JwtAuthGuard, {
-	OptionalJwtAuthGuard,
-} from 'src/authentication/jwt/jwt-auth.guard';
+import JwtAuthGuard from 'src/authentication/jwt/jwt-auth.guard';
 import { AuthedUserResponse, PublicUserResponse } from './user.response';
 import { UserService } from './user.service';
 import { PaginationParameters } from 'src/pagination/models/pagination-parameters';
@@ -28,7 +26,8 @@ export class UserController {
 	@ApiOperation({
 		summary: 'Get Many Users',
 	})
-	@UseGuards(OptionalJwtAuthGuard)
+	@ApiBearerAuth()
+	@UseGuards(JwtAuthGuard)
 	@ApiPaginatedResponse(AuthedUserResponse)
 	@UseInterceptors(PaginatedResponseBuilderInterceptor)
 	public getUsers(
@@ -59,7 +58,8 @@ export class UserController {
 	@ApiOperation({
 		summary: 'Get A Profile from a User ID',
 	})
-	@UseGuards(OptionalJwtAuthGuard)
+	@ApiBearerAuth()
+	@UseGuards(JwtAuthGuard)
 	public async getUser(
 		@Param('id', ParseIntPipe) id: number,
 		@Request() req: any,
