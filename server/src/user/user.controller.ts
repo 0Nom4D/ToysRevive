@@ -17,7 +17,7 @@ import { PaginationParameters } from 'src/pagination/models/pagination-parameter
 import { User } from '@prisma/client';
 import { ApiPaginatedResponse } from 'src/pagination/paginated-response.decorator';
 import PaginatedResponseBuilderInterceptor from 'src/interceptors/page-response.interceptor';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Users')
 @Controller('users')
@@ -26,7 +26,7 @@ export class UserController {
 
 	@Get()
 	@ApiOperation({
-		summary: 'Get Many Users user',
+		summary: 'Get Many Users',
 	})
 	@UseGuards(OptionalJwtAuthGuard)
 	@ApiPaginatedResponse(AuthedUserResponse)
@@ -44,6 +44,7 @@ export class UserController {
 	}
 
 	@Get('me')
+	@ApiBearerAuth()
 	@ApiOperation({
 		summary: 'Get Profile of the currently authentified user',
 	})

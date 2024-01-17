@@ -14,7 +14,12 @@ import {
 	UseGuards,
 	UseInterceptors,
 } from '@nestjs/common';
-import { ApiOperation, ApiPropertyOptional, ApiTags } from '@nestjs/swagger';
+import {
+	ApiBearerAuth,
+	ApiOperation,
+	ApiPropertyOptional,
+	ApiTags,
+} from '@nestjs/swagger';
 import { Condition, Prisma, ToyType } from '@prisma/client';
 import JwtAuthGuard from 'src/authentication/jwt/jwt-auth.guard';
 import PaginatedResponseBuilderInterceptor from 'src/interceptors/page-response.interceptor';
@@ -106,6 +111,7 @@ export class ToyListingController {
 	}
 
 	@Put(':id')
+	@ApiBearerAuth()
 	@ApiOperation({
 		summary: 'Update Listing',
 	})
@@ -128,6 +134,7 @@ export class ToyListingController {
 	}
 
 	@Delete(':id')
+	@ApiBearerAuth()
 	@ApiOperation({
 		summary: 'Delete Listing',
 	})
@@ -149,6 +156,7 @@ export class ToyListingController {
 	}
 
 	@Post()
+	@ApiBearerAuth()
 	@ApiOperation({
 		summary: 'Create Listing',
 	})

@@ -16,6 +16,7 @@ async function bootstrap() {
 		.setTitle('ToysRevive Server')
 		.setDescription('API description')
 		.setVersion('1.0')
+		.addBearerAuth()
 		.build();
 	const document = SwaggerModule.createDocument(app, config);
 
