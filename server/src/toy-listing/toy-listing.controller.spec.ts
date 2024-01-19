@@ -156,15 +156,10 @@ describe('ToyListing Controller', () => {
 		});
 	});
 	describe('Get One Listing', () => {
-		it('Should Get A Listing (not authentified)', () => {
+		it('Should Not Get A Listing (not authentified)', () => {
 			return request(app.getHttpServer())
 				.get(`/listings/${user1Listing.id}`)
-				.expect(HttpStatus.OK)
-				.expect((res) => {
-					expect(res.body).toStrictEqual(
-						exceptedListingResponse(user1Listing),
-					);
-				});
+				.expect(HttpStatus.UNAUTHORIZED);
 		});
 		it('Should Get A Listing (Authentified, not Owner)', () => {
 			return request(app.getHttpServer())
@@ -192,6 +187,7 @@ describe('ToyListing Controller', () => {
 			return request(app.getHttpServer())
 				.get(`/listings`)
 				.expect(HttpStatus.OK)
+				.set({ Authorization: `Bearer ${user1Token}` })
 				.expect((res) => {
 					const listings: ToyListing[] = res.body.items;
 
@@ -207,6 +203,7 @@ describe('ToyListing Controller', () => {
 		it('Should Get All listings, except the first', () => {
 			return request(app.getHttpServer())
 				.get(`/listings?skip=1`)
+				.set({ Authorization: `Bearer ${user1Token}` })
 				.expect(HttpStatus.OK)
 				.expect((res) => {
 					const listings: ToyListing[] = res.body.items;
@@ -221,6 +218,7 @@ describe('ToyListing Controller', () => {
 		it('Should Sort Listings By Name (Desc)', () => {
 			return request(app.getHttpServer())
 				.get(`/listings?sortBy=title&oder=desc`)
+				.set({ Authorization: `Bearer ${user1Token}` })
 				.expect(HttpStatus.OK)
 				.expect((res) => {
 					const listings: ToyListing[] = res.body.items;
@@ -237,6 +235,7 @@ describe('ToyListing Controller', () => {
 		it('Should Filter Listings By Condition', () => {
 			return request(app.getHttpServer())
 				.get(`/listings?condition=New`)
+				.set({ Authorization: `Bearer ${user1Token}` })
 				.expect(HttpStatus.OK)
 				.expect((res) => {
 					const listings: ToyListing[] = res.body.items;
@@ -250,6 +249,7 @@ describe('ToyListing Controller', () => {
 		it('Should Filter Listings By Type', () => {
 			return request(app.getHttpServer())
 				.get(`/listings?type=VideoGame`)
+				.set({ Authorization: `Bearer ${user1Token}` })
 				.expect(HttpStatus.OK)
 				.expect((res) => {
 					const listings: ToyListing[] = res.body.items;
@@ -263,6 +263,7 @@ describe('ToyListing Controller', () => {
 		it('Should Get Listings By Owner', () => {
 			return request(app.getHttpServer())
 				.get(`/listings?ownerId=${user2.id}`)
+				.set({ Authorization: `Bearer ${user1Token}` })
 				.expect(HttpStatus.OK)
 				.expect((res) => {
 					const listings: ToyListing[] = res.body.items;
@@ -272,6 +273,11 @@ describe('ToyListing Controller', () => {
 						exceptedListingResponse(user2Listing),
 					);
 				});
+		});
+		it('Should Fail (Unauthentified)', () => {
+			return request(app.getHttpServer())
+				.get(`/listings`)
+				.expect(HttpStatus.UNAUTHORIZED);
 		});
 	});
 	describe('Update One Listing', () => {
@@ -382,6 +388,7 @@ describe('ToyListing Controller', () => {
 		it('Should fail, as the listing was deleted', () => {
 			return request(app.getHttpServer())
 				.get(`/listings/${user1Listing.id}`)
+				.set({ Authorization: `Bearer ${user1Token}` })
 				.expect(HttpStatus.NOT_FOUND)
 				.expect((res) => {
 					expect(res.body.message).toBe('Resource not found');

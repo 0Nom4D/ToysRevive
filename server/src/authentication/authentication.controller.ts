@@ -7,7 +7,7 @@ import { User } from 'src/prisma/models';
 import LoginDTO from './models/login.dto';
 import { UserService } from 'src/user/user.service';
 import { CreateUserDTO } from 'src/user/user.dto';
-import { AuthedUserResponse } from 'src/user/user.response';
+import { UserResponse } from 'src/user/user.response';
 
 @ApiTags('Authentication')
 @Controller('auth')
@@ -38,9 +38,9 @@ export default class AuthenticationController {
 		type: CreateUserDTO,
 	})
 	@Post('register')
-	async register(@Body() dto: CreateUserDTO): Promise<AuthedUserResponse> {
+	async register(@Body() dto: CreateUserDTO): Promise<UserResponse> {
 		const createdUser = await this.userService.createUser(dto);
 
-		return new AuthedUserResponse(createdUser);
+		return new UserResponse(createdUser);
 	}
 }

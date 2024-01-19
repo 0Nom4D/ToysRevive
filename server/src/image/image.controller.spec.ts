@@ -145,6 +145,7 @@ describe('Image Controller', () => {
 		it('Should Return The Image Info With The Listing ', async () => {
 			return request(app.getHttpServer())
 				.get(`/listings/${user1Listing.id}`)
+				.set({ Authorization: `Bearer ${user1Token}` })
 				.expect(HttpStatus.OK)
 				.expect((res) => {
 					const response: ToyListingResponse = res.body;
@@ -177,15 +178,22 @@ describe('Image Controller', () => {
 				});
 			await request(app.getHttpServer())
 				.get(`/images/${image2.id}`)
+				.set({ Authorization: `Bearer ${user1Token}` })
 				.expect(HttpStatus.NOT_FOUND)
 				.expect((res) => {
 					expect(res.body.message).toBe('Image file not found');
 				});
 			await module.get(ImageService).deleteImage(image2.id);
 		});
+		it('Should Fail, as the user is not authentified', async () => {
+			return request(app.getHttpServer())
+				.get(`/images/${image.id}`)
+				.expect(HttpStatus.UNAUTHORIZED);
+		});
 		it('Should Return The Image', async () => {
 			return request(app.getHttpServer())
 				.get(`/images/${image.id}`)
+				.set({ Authorization: `Bearer ${user1Token}` })
 				.expect(HttpStatus.OK)
 				.expect((res) => {
 					expect(res.body).toEqual(
@@ -231,6 +239,7 @@ describe('Image Controller', () => {
 		it('Should Return The Image Info Without The Listing', async () => {
 			return request(app.getHttpServer())
 				.get(`/listings/${user1Listing.id}`)
+				.set({ Authorization: `Bearer ${user1Token}` })
 				.expect(HttpStatus.OK)
 				.expect((res) => {
 					const response: ToyListingResponse = res.body;
