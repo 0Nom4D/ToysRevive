@@ -169,22 +169,16 @@ describe('UserController', () => {
 	});
 
 	describe('Get Single User', () => {
-		it('Should Get A User (Unauthentified)', async () => {
-			const dataResponse = await request(app.getHttpServer()).get(
-				`/users/${user2.id}`,
-			);
-			const data: User = dataResponse.body;
-			expect(data.userName).toBe(user2.userName);
-			expect(data.password).toBeUndefined();
-			expect(data.firstName).toBeUndefined();
-			expect(data.lastName).toBeUndefined();
-			expect(data.email).toBeUndefined();
-			expect(data.phone).toBeUndefined();
+		it('Should Not Get A User', async () => {
+			await request(app.getHttpServer())
+				.get(`/users/${user2.id}`)
+				.expect(HttpStatus.UNAUTHORIZED);
 		});
 		it('Should Get A User (Authentified)', async () => {
 			const dataResponse = await request(app.getHttpServer())
 				.get(`/users/${user2.id}`)
-				.set({ Authorization: `Bearer ${user1Token}` });
+				.set({ Authorization: `Bearer ${user1Token}` })
+				.expect(HttpStatus.OK);
 			const data: User = dataResponse.body;
 			expect(data.userName).toBe(user2.userName);
 			expect(data.password).toBeUndefined();
@@ -192,9 +186,9 @@ describe('UserController', () => {
 			expect(data.email).toBeDefined();
 		});
 		it('Should Not Get the User (Not Found)', async () => {
-			const dataResponse = await request(app.getHttpServer()).get(
-				`/users/-1`,
-			);
+			const dataResponse = await request(app.getHttpServer())
+				.get(`/users/-1`)
+				.set({ Authorization: `Bearer ${user1Token}` });
 			expect(dataResponse.statusCode).toBe(HttpStatus.NOT_FOUND);
 			const data = dataResponse.body;
 			expect(data.message).toBeDefined();
@@ -202,15 +196,10 @@ describe('UserController', () => {
 	});
 
 	describe('Get Many Users', () => {
-		it('Should Get Many Users (Unauthentified)', async () => {
-			const dataResponse = await request(app.getHttpServer()).get(
-				`/users`,
-			);
-			const data: User[] = dataResponse.body.items;
-			expect(data[0].id).toEqual(user1.id);
-			expect(data[0].firstName).toBeUndefined();
-			expect(data[1].id).toEqual(user2.id);
-			expect(data[1].phone).toBeUndefined();
+		it('Should Not Get Many Users (Unauthentified)', async () => {
+			await request(app.getHttpServer())
+				.get(`/users`)
+				.expect(HttpStatus.UNAUTHORIZED);
 		});
 
 		it('Should Get Many Users (Authentified)', async () => {
@@ -220,8 +209,10 @@ describe('UserController', () => {
 			const data: User[] = dataResponse.body.items;
 			expect(data[0].id).toEqual(user1.id);
 			expect(data[0].firstName).toEqual(user1.firstName);
+			expect(data[0].password).toBeUndefined();
 			expect(data[1].id).toEqual(user2.id);
 			expect(data[1].phone).toBeDefined();
+			expect(data[1].password).toBeUndefined();
 		});
 
 		it('Should Get Many Users (w/ Pagination (Take))', async () => {
