@@ -15,7 +15,7 @@ import {
 	UseInterceptors,
 } from '@nestjs/common';
 import { ImageService } from './image.service';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { ToyListingService } from 'src/toy-listing/toy-listing.service';
 import JwtAuthGuard from 'src/authentication/jwt/jwt-auth.guard';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -29,9 +29,11 @@ export class ImageController {
 	) {}
 
 	@Get(':id')
+	@ApiBearerAuth()
 	@ApiOperation({
 		summary: 'Get A Single Image',
 	})
+	@UseGuards(JwtAuthGuard)
 	public getListingImage(
 		@Param('id', ParseIntPipe) id: number,
 		@Response({ passthrough: true }) res: any,
@@ -40,6 +42,7 @@ export class ImageController {
 	}
 
 	@Post(':listingId')
+	@ApiBearerAuth()
 	@ApiOperation({
 		summary: 'Create An Image for a listing',
 	})
@@ -72,6 +75,7 @@ export class ImageController {
 	}
 
 	@Delete(':id')
+	@ApiBearerAuth()
 	@ApiOperation({
 		summary: 'Delete A Single Image',
 	})

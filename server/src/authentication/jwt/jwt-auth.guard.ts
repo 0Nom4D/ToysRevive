@@ -43,24 +43,3 @@ export default class JwtAuthGuard extends AuthGuard('jwt') {
 		return super.canActivate(context);
 	}
 }
-
-@Injectable()
-export class OptionalJwtAuthGuard extends JwtAuthGuard {
-	handleRequest(
-		err: any,
-		user: any,
-		info: any,
-		_context: ExecutionContext,
-		_status?: any,
-	): any {
-		try {
-			return super.handleRequest(err, user, info, _context, _status);
-		} catch {
-			return null;
-		}
-	}
-
-	canActivate(context: ExecutionContext) {
-		return super.canActivate(context);
-	}
-}
