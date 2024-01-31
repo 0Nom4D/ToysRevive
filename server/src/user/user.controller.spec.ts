@@ -133,7 +133,7 @@ describe('UserController', () => {
 					password: '123456789',
 				});
 			expect(loginResponse.statusCode).toBe(HttpStatus.CREATED);
-			user1Token = loginResponse.body.access_token;
+			user1Token = loginResponse.body.accessToken;
 			expect(user1Token).toBeDefined();
 			expect(typeof user1Token).toBe('string');
 

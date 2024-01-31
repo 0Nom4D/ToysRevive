@@ -8,5 +8,5 @@ export default class JwtResponse {
 		description:
 			"JWT Access Token. To add to request's header for authenticated requests",
 	})
-	access_token: string;
+	accessToken: string;
 }
