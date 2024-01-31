@@ -35,7 +35,7 @@ export default class AuthenticationService {
 		const payload: JwtPayload = { userName: user.userName, id: user.id };
 
 		return {
-			access_token: this.jwtService.sign(payload),
+			accessToken: this.jwtService.sign(payload),
 		};
 	}
 }

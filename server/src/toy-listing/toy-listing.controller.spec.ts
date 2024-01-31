@@ -80,7 +80,7 @@ describe('ToyListing Controller', () => {
 					password: 'MyPassword',
 				});
 			expect(loginResponse.statusCode).toBe(HttpStatus.CREATED);
-			user1Token = loginResponse.body.access_token;
+			user1Token = loginResponse.body.accessToken;
 			expect(user1Token).toBeDefined();
 		});
 		it('Should Get Access tokens (User 2)', async () => {
@@ -91,7 +91,7 @@ describe('ToyListing Controller', () => {
 					password: 'MyPassword2',
 				});
 			expect(loginResponse.statusCode).toBe(HttpStatus.CREATED);
-			user2Token = loginResponse.body.access_token;
+			user2Token = loginResponse.body.accessToken;
 			expect(user2Token).toBeDefined();
 		});
 	});

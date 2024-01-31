@@ -70,13 +70,13 @@ describe('Image Controller', () => {
 				username: 'firstName',
 				password: 'MyPassword',
 			})
-		).body.access_token;
+		).body.accessToken;
 		user2Token = (
 			await request(app.getHttpServer()).post(`/auth/login`).send({
 				username: 'secondLast',
 				password: 'MyPassword2',
 			})
-		).body.access_token;
+		).body.accessToken;
 		user1Listing = (
 			await request(app.getHttpServer())
 				.post(`/listings`)
