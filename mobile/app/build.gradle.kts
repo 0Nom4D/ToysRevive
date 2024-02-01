@@ -1,3 +1,5 @@
+import com.android.build.api.variant.BuildConfigField
+
 plugins {
     id("com.android.application")
     id("kotlin-kapt")
@@ -40,6 +42,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.8"
@@ -48,6 +51,16 @@ android {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
+    }
+}
+
+androidComponents {
+    onVariants {
+        it.buildConfigFields.put(
+            "API_URL", BuildConfigField(
+                "String", "\"${System.getenv("TR_API_URL") ?: "http://localhost:3000"}\"", "TR API URL"
+            )
+        )
     }
 }
 
