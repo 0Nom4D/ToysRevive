@@ -40,6 +40,8 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 
+import dagger.hilt.android.AndroidEntryPoint
+
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -52,6 +54,7 @@ import nom4d.toysrevive.settings.SettingsModal
 import nom4d.toysrevive.swipe.SwipeableCardDescriptionModal
 import nom4d.toysrevive.ui.theme.ToysReviveTheme
 
+@AndroidEntryPoint
 @OptIn(ExperimentalMaterial3Api::class)
 class MainActivity : AppCompatActivity() {
     @RequiresApi(Build.VERSION_CODES.R)

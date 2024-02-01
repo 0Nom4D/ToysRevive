@@ -1,14 +1,40 @@
-# Stack-related
-.stack-work/
+# compiled output
+/dist
+/node_modules
 
-# Temporary files
-*~
+# Logs
+logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
 
-# Compiled files
-*.o
+# OS
+.DS_Store
 
-# Robot tests output
-log.html
-output.xml
-report.html
-env
+.env
+
+# Tests
+/coverage
+/.nyc_output
+
+# IDEs and editors
+/.idea
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# IDE - VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+src/prisma/models/
+
+./data
