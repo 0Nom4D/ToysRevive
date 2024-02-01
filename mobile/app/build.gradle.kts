@@ -57,8 +57,11 @@ android {
 androidComponents {
     onVariants {
         it.buildConfigFields.put(
-            "API_URL", BuildConfigField(
-                "String", "\"${System.getenv("TR_API_URL") ?: "http://localhost:3000"}\"", "TR API URL"
+            "API_URL",
+            BuildConfigField(
+                "String",
+                "\"${System.getenv("TR_API_URL") ?: "http://localhost:3000"}\"",
+                "TR API URL"
             )
         )
     }
