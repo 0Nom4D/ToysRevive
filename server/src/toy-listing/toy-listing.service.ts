@@ -13,7 +13,7 @@ export class ToyListingService {
 	) {}
 
 	async getMany(
-		where: Partial<Omit<ToyListing, 'id'>>,
+		where: Partial<Omit<Prisma.ToyListingWhereInput, 'id'>>,
 		pagination: PaginationParameters,
 		sortBy?: {
 			sortBy: Prisma.ToyListingScalarFieldEnum;
@@ -69,6 +69,22 @@ export class ToyListingService {
 					},
 				},
 			},
+		});
+	}
+
+	async likeListing(userId: number, listingId: number, like: boolean = true) {
+		return this.prismaService.userLike.upsert({
+			create: {
+				userId, listingId, liked: like
+			},
+			update: {
+				liked: like
+			},
+			where: {
+				userId_listingId: {
+					userId, listingId
+				}
+			}
 		});
 	}
 }

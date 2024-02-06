@@ -42,6 +42,12 @@ class QueryParameters {
 	@IsEnum(Condition)
 	@IsOptional()
 	condition?: Condition;
+	@ApiPropertyOptional({
+		description:
+			'If specified, will get listings that do NOT belong to the user, that they have dis/liked',
+	})
+	@IsOptional()
+	liked?: boolean;
 	@ApiPropertyOptional({ description: 'Filter by Toy Type', enum: ToyType })
 	@IsEnum(ToyType)
 	@IsOptional()
@@ -87,13 +93,37 @@ export class ToyListingController {
 	@ApiPaginatedResponse(ToyListingResponse)
 	@UseInterceptors(PaginatedResponseBuilderInterceptor)
 	public getListings(
+		@Request() req: any,
 		@Query()
 		paginationParameters?: PaginationParameters,
 		@Query() selector?: QueryParameters,
 		@Query() sort?: SortParameters,
 	) {
+		let where: Prisma.ToyListingWhereInput = selector;
+
+		if (selector.liked !== undefined) {
+			where = {
+				...selector,
+				AND: [
+					{
+						ownerId: {
+							not: req.user.id,
+						},
+					},
+					{
+						ownerId: selector.ownerId,
+					},
+				],
+				likedBy: {
+					some: {
+						liked: selector.liked,
+						userId: req.user.id,
+					},
+				},
+			} satisfies Prisma.ToyListingWhereInput;
+		}
 		return this.toyListingService.getMany(
-			selector ?? {},
+			where ?? {},
 			paginationParameters,
 			{
 				sortBy: sort.sortBy ?? 'addDate',
@@ -135,6 +165,52 @@ export class ToyListingController {
 			);
 		}
 		return this.toyListingService.update(listing.id, updateDto);
+	}
+
+	@Post(':id/like')
+	@ApiBearerAuth()
+	@ApiOperation({
+		summary: 'Set a Listing as "liked"',
+	})
+	@UseGuards(JwtAuthGuard)
+	public async likeListing(
+		@Param('id', ParseIntPipe) id: number,
+		@Request() req: any,
+	): Promise<void> {
+		await this.saveLikeListing(req.user.id, id, true);
+	}
+
+	@Post(':id/dislike')
+	@ApiBearerAuth()
+	@ApiOperation({
+		summary: 'Set a Listing as "disliked"',
+	})
+	@UseGuards(JwtAuthGuard)
+	public async dislikeListing(
+		@Param('id', ParseIntPipe) id: number,
+		@Request() req: any,
+	): Promise<void> {
+		await this.saveLikeListing(req.user.id, id, false);
+	}
+
+	private async saveLikeListing(
+		authedUserId: number,
+		listingId: number,
+		like: boolean,
+	) {
+		const listing = await this.toyListingService.get(listingId);
+
+		if (listing.ownerId === authedUserId) {
+			throw new HttpException(
+				'You can not (dis)like a listing that is not yours.',
+				HttpStatus.UNAUTHORIZED,
+			);
+		}
+		await this.toyListingService.likeListing(
+			authedUserId,
+			listing.id,
+			like,
+		);
 	}
 
 	@Delete(':id')
