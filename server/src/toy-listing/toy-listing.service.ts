@@ -75,16 +75,19 @@ export class ToyListingService {
 	async likeListing(userId: number, listingId: number, like: boolean = true) {
 		return this.prismaService.userLike.upsert({
 			create: {
-				userId, listingId, liked: like
+				userId,
+				listingId,
+				liked: like,
 			},
 			update: {
-				liked: like
+				liked: like,
 			},
 			where: {
 				userId_listingId: {
-					userId, listingId
-				}
-			}
+					userId,
+					listingId,
+				},
+			},
 		});
 	}
 }

@@ -181,13 +181,13 @@ describe('ToyListing Controller', () => {
 		it('Should Not Like a Listing (not authentified)', () => {
 			return request(app.getHttpServer())
 				.post(`/listings/${user2Listing.id}/like`)
-				.expect(HttpStatus.UNAUTHORIZED)
+				.expect(HttpStatus.UNAUTHORIZED);
 		});
 		it('Should Not Like a Listing (is the owner)', () => {
 			return request(app.getHttpServer())
 				.post(`/listings/${user2Listing.id}/like`)
 				.set({ Authorization: `Bearer ${user2Token}` })
-				.expect(HttpStatus.BAD_REQUEST)
+				.expect(HttpStatus.BAD_REQUEST);
 		});
 		it('Should Like a Listing', () => {
 			return request(app.getHttpServer())
@@ -201,7 +201,7 @@ describe('ToyListing Controller', () => {
 				.set({ Authorization: `Bearer ${user2Token}` })
 				.expect(HttpStatus.CREATED);
 		});
-	})
+	});
 	describe('Get One Listing', () => {
 		it('Should Not Get A Listing (not authentified)', () => {
 			return request(app.getHttpServer())

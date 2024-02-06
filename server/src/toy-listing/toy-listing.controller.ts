@@ -131,14 +131,20 @@ export class ToyListingController {
 					},
 				],
 				likedBy: {
-					some: selector.liked !== undefined ? {
-						liked: selector.liked,
-						userId: req.user.id,
-					} : undefined,
-					none: selector.new !== undefined ? {
-						userId: req.user.id,
-					} : undefined,
-				}
+					some:
+						selector.liked !== undefined
+							? {
+									liked: selector.liked,
+									userId: req.user.id,
+								}
+							: undefined,
+					none:
+						selector.new !== undefined
+							? {
+									userId: req.user.id,
+								}
+							: undefined,
+				},
 			} satisfies Prisma.ToyListingWhereInput;
 		}
 		return this.toyListingService.getMany(
