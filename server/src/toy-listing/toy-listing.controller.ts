@@ -31,8 +31,9 @@ import {
 	UpdateToyListing,
 } from 'src/prisma/models';
 import { ToyListingService } from './toy-listing.service';
-import { IsEnum, IsNumber, IsOptional } from 'class-validator';
+import { IsBoolean, IsEnum, IsNumber, IsOptional } from 'class-validator';
 import { ToyListingResponse } from './toy-listing.response';
+import { Transform } from 'class-transformer';
 
 class QueryParameters {
 	@ApiPropertyOptional({
@@ -47,7 +48,15 @@ class QueryParameters {
 			'If specified, will get listings that do NOT belong to the user, that they have dis/liked',
 	})
 	@IsOptional()
+	@Transform(({ obj }) => obj.liked === 'true')
 	liked?: boolean;
+	@ApiPropertyOptional({
+		description:
+			'If specified, will get listings that do NOT belong to the user, that they have not dis/liked',
+	})
+	@IsOptional()
+	@IsBoolean()
+	new?: true;
 	@ApiPropertyOptional({ description: 'Filter by Toy Type', enum: ToyType })
 	@IsEnum(ToyType)
 	@IsOptional()
@@ -99,11 +108,18 @@ export class ToyListingController {
 		@Query() selector?: QueryParameters,
 		@Query() sort?: SortParameters,
 	) {
-		let where: Prisma.ToyListingWhereInput = selector;
+		if (selector.liked !== undefined && selector.new !== undefined) {
+			throw new HttpException(
+				"'liked' and 'new' can not be mutually used",
+				HttpStatus.BAD_REQUEST,
+			);
+		}
+		const { liked, new: __, ...otherArgs } = selector;
+		let where: Prisma.ToyListingWhereInput = otherArgs;
 
-		if (selector.liked !== undefined) {
+		if (selector.new !== undefined || selector.liked !== undefined) {
 			where = {
-				...selector,
+				...where,
 				AND: [
 					{
 						ownerId: {
@@ -115,11 +131,14 @@ export class ToyListingController {
 					},
 				],
 				likedBy: {
-					some: {
+					some: selector.liked !== undefined ? {
 						liked: selector.liked,
 						userId: req.user.id,
-					},
-				},
+					} : undefined,
+					none: selector.new !== undefined ? {
+						userId: req.user.id,
+					} : undefined,
+				}
 			} satisfies Prisma.ToyListingWhereInput;
 		}
 		return this.toyListingService.getMany(
@@ -203,7 +222,7 @@ export class ToyListingController {
 		if (listing.ownerId === authedUserId) {
 			throw new HttpException(
 				'You can not (dis)like a listing that is not yours.',
-				HttpStatus.UNAUTHORIZED,
+				HttpStatus.BAD_REQUEST,
 			);
 		}
 		await this.toyListingService.likeListing(
