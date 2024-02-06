@@ -4,14 +4,16 @@ sealed class NavigationItem(
     val routeName: String,
     val appBarDisplayName: String
 ) {
-    data object WishListScreen : NavigationItem("Wish List", "Liked Toys")
-    data object HomeScreen : NavigationItem("Home", "")
-    data object ToyAdCreationScreen : NavigationItem("Ad Creation", "Give a toy")
-    data object ProfileScreen : NavigationItem("Profile", "Profile")
+    data object LoginScreen : NavigationItem("login", "")
+    data object WishListScreen : NavigationItem("wish", "Liked Toys")
+    data object HomeScreen : NavigationItem("home", "")
+    data object ToyAdCreationScreen : NavigationItem("create", "Give a toy")
+    data object ProfileScreen : NavigationItem("me", "Profile")
 }
 
 fun getRouteDisplayName(routeName: String?): String? {
     val availableRoutes = listOf(
+        NavigationItem.LoginScreen,
         NavigationItem.HomeScreen,
         NavigationItem.WishListScreen,
         NavigationItem.ToyAdCreationScreen,
