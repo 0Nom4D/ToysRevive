@@ -29,7 +29,7 @@ describe('UserController', () => {
 	});
 
 	describe('Registration Flow', () => {
-		it('Should create the admin user', () => {
+		it('Should create the user', () => {
 			let dto: CreateUserDTO = {
 				phone: '0123456789',
 				email: 'user.first@user.com',
@@ -54,7 +54,7 @@ describe('UserController', () => {
 				});
 		});
 
-		it('Should create the user user', () => {
+		it('Should create the user', () => {
 			let dto: CreateUserDTO = {
 				phone: '0234567891',
 				email: 'user2.first@user.com',
@@ -125,6 +125,24 @@ describe('UserController', () => {
 	});
 
 	describe('Authentication Flow', () => {
+		it('Should Fail to Login (Bad Username)', async () => {
+			const loginResponse = await request(app.getHttpServer())
+				.post(`/auth/login`)
+				.send({
+					username: 'userfirt',
+					password: '123456789',
+				});
+			expect(loginResponse.statusCode).toBe(HttpStatus.FORBIDDEN);
+		});
+		it('Should Fail to Login (Bad Password)', async () => {
+			const loginResponse = await request(app.getHttpServer())
+				.post(`/auth/login`)
+				.send({
+					username: 'userfirst',
+					password: '12345678',
+				});
+			expect(loginResponse.statusCode).toBe(HttpStatus.FORBIDDEN);
+		});
 		it('Should Login and access their information', async () => {
 			const loginResponse = await request(app.getHttpServer())
 				.post(`/auth/login`)

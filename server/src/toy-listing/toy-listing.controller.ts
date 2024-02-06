@@ -31,8 +31,9 @@ import {
 	UpdateToyListing,
 } from 'src/prisma/models';
 import { ToyListingService } from './toy-listing.service';
-import { IsEnum, IsNumber, IsOptional } from 'class-validator';
+import { IsBoolean, IsEnum, IsNumber, IsOptional } from 'class-validator';
 import { ToyListingResponse } from './toy-listing.response';
+import { Transform } from 'class-transformer';
 
 class QueryParameters {
 	@ApiPropertyOptional({
@@ -42,6 +43,20 @@ class QueryParameters {
 	@IsEnum(Condition)
 	@IsOptional()
 	condition?: Condition;
+	@ApiPropertyOptional({
+		description:
+			'If specified, will get listings that do NOT belong to the user, that they have dis/liked',
+	})
+	@IsOptional()
+	@Transform(({ obj }) => obj.liked === 'true')
+	liked?: boolean;
+	@ApiPropertyOptional({
+		description:
+			'If specified, will get listings that do NOT belong to the user, that they have not dis/liked',
+	})
+	@IsOptional()
+	@IsBoolean()
+	new?: true;
 	@ApiPropertyOptional({ description: 'Filter by Toy Type', enum: ToyType })
 	@IsEnum(ToyType)
 	@IsOptional()
@@ -87,13 +102,53 @@ export class ToyListingController {
 	@ApiPaginatedResponse(ToyListingResponse)
 	@UseInterceptors(PaginatedResponseBuilderInterceptor)
 	public getListings(
+		@Request() req: any,
 		@Query()
 		paginationParameters?: PaginationParameters,
 		@Query() selector?: QueryParameters,
 		@Query() sort?: SortParameters,
 	) {
+		if (selector.liked !== undefined && selector.new !== undefined) {
+			throw new HttpException(
+				"'liked' and 'new' can not be mutually used",
+				HttpStatus.BAD_REQUEST,
+			);
+		}
+		const { liked, new: __, ...otherArgs } = selector;
+		let where: Prisma.ToyListingWhereInput = otherArgs;
+
+		if (selector.new !== undefined || selector.liked !== undefined) {
+			where = {
+				...where,
+				AND: [
+					{
+						ownerId: {
+							not: req.user.id,
+						},
+					},
+					{
+						ownerId: selector.ownerId,
+					},
+				],
+				likedBy: {
+					some:
+						selector.liked !== undefined
+							? {
+									liked: selector.liked,
+									userId: req.user.id,
+								}
+							: undefined,
+					none:
+						selector.new !== undefined
+							? {
+									userId: req.user.id,
+								}
+							: undefined,
+				},
+			} satisfies Prisma.ToyListingWhereInput;
+		}
 		return this.toyListingService.getMany(
-			selector ?? {},
+			where ?? {},
 			paginationParameters,
 			{
 				sortBy: sort.sortBy ?? 'addDate',
@@ -135,6 +190,52 @@ export class ToyListingController {
 			);
 		}
 		return this.toyListingService.update(listing.id, updateDto);
+	}
+
+	@Post(':id/like')
+	@ApiBearerAuth()
+	@ApiOperation({
+		summary: 'Set a Listing as "liked"',
+	})
+	@UseGuards(JwtAuthGuard)
+	public async likeListing(
+		@Param('id', ParseIntPipe) id: number,
+		@Request() req: any,
+	): Promise<void> {
+		await this.saveLikeListing(req.user.id, id, true);
+	}
+
+	@Post(':id/dislike')
+	@ApiBearerAuth()
+	@ApiOperation({
+		summary: 'Set a Listing as "disliked"',
+	})
+	@UseGuards(JwtAuthGuard)
+	public async dislikeListing(
+		@Param('id', ParseIntPipe) id: number,
+		@Request() req: any,
+	): Promise<void> {
+		await this.saveLikeListing(req.user.id, id, false);
+	}
+
+	private async saveLikeListing(
+		authedUserId: number,
+		listingId: number,
+		like: boolean,
+	) {
+		const listing = await this.toyListingService.get(listingId);
+
+		if (listing.ownerId === authedUserId) {
+			throw new HttpException(
+				'You can not (dis)like a listing that is not yours.',
+				HttpStatus.BAD_REQUEST,
+			);
+		}
+		await this.toyListingService.likeListing(
+			authedUserId,
+			listing.id,
+			like,
+		);
 	}
 
 	@Delete(':id')

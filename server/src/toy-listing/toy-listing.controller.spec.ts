@@ -25,6 +25,7 @@ const exceptedListingResponse = (response: ToyListing) => ({
 describe('ToyListing Controller', () => {
 	let user1: User;
 	let user1Listing: ToyListing;
+	let user1Listing2: ToyListing;
 	let user2: User;
 	let user2Listing: ToyListing;
 	let user1Token: string;
@@ -132,6 +133,27 @@ describe('ToyListing Controller', () => {
 					expect(user1Listing.ownerId).toBe(user1.id);
 				});
 		});
+		it('Should Create A Second Listing for the first user', () => {
+			return request(app.getHttpServer())
+				.post(`/listings`)
+				.set({ Authorization: `Bearer ${user1Token}` })
+				.send({
+					condition: 'Good',
+					title: 'Silent Hill 3 - PS3 Game with Box and Booklet',
+					description: 'Working Game. Some light scratches.',
+					type: 'VideoGame',
+					postCode: 75000,
+				} satisfies CreateToyListing)
+				.expect(HttpStatus.CREATED)
+				.expect((res) => {
+					user1Listing2 = res.body;
+					expect(user1Listing2.id).toBeDefined();
+					expect(user1Listing2.title).toBe(
+						'Silent Hill 3 - PS3 Game with Box and Booklet',
+					);
+					expect(user1Listing2.ownerId).toBe(user1.id);
+				});
+		});
 		it('Should Create A Listing for the second user', () => {
 			return request(app.getHttpServer())
 				.post(`/listings`)
@@ -153,6 +175,31 @@ describe('ToyListing Controller', () => {
 					);
 					expect(user2Listing.ownerId).toBe(user2.id);
 				});
+		});
+	});
+	describe('Like a Listing', () => {
+		it('Should Not Like a Listing (not authentified)', () => {
+			return request(app.getHttpServer())
+				.post(`/listings/${user2Listing.id}/like`)
+				.expect(HttpStatus.UNAUTHORIZED);
+		});
+		it('Should Not Like a Listing (is the owner)', () => {
+			return request(app.getHttpServer())
+				.post(`/listings/${user2Listing.id}/like`)
+				.set({ Authorization: `Bearer ${user2Token}` })
+				.expect(HttpStatus.BAD_REQUEST);
+		});
+		it('Should Like a Listing', () => {
+			return request(app.getHttpServer())
+				.post(`/listings/${user2Listing.id}/like`)
+				.set({ Authorization: `Bearer ${user1Token}` })
+				.expect(HttpStatus.CREATED);
+		});
+		it('Should Dislike a Listing', () => {
+			return request(app.getHttpServer())
+				.post(`/listings/${user1Listing.id}/dislike`)
+				.set({ Authorization: `Bearer ${user2Token}` })
+				.expect(HttpStatus.CREATED);
 		});
 	});
 	describe('Get One Listing', () => {
@@ -191,18 +238,21 @@ describe('ToyListing Controller', () => {
 				.expect((res) => {
 					const listings: ToyListing[] = res.body.items;
 
-					expect(listings.length).toBe(2);
+					expect(listings.length).toBe(3);
 					expect(listings.at(0)).toStrictEqual(
 						exceptedListingResponse(user2Listing),
 					);
 					expect(listings.at(1)).toStrictEqual(
+						exceptedListingResponse(user1Listing2),
+					);
+					expect(listings.at(2)).toStrictEqual(
 						exceptedListingResponse(user1Listing),
 					);
 				});
 		});
-		it('Should Get All listings, except the first', () => {
+		it('Should Get All listings, except the two firsts', () => {
 			return request(app.getHttpServer())
-				.get(`/listings?skip=1`)
+				.get(`/listings?skip=2`)
 				.set({ Authorization: `Bearer ${user1Token}` })
 				.expect(HttpStatus.OK)
 				.expect((res) => {
@@ -223,11 +273,14 @@ describe('ToyListing Controller', () => {
 				.expect((res) => {
 					const listings: ToyListing[] = res.body.items;
 
-					expect(listings.length).toBe(2);
+					expect(listings.length).toBe(3);
 					expect(listings.at(0)).toStrictEqual(
-						exceptedListingResponse(user1Listing),
+						exceptedListingResponse(user1Listing2),
 					);
 					expect(listings.at(1)).toStrictEqual(
+						exceptedListingResponse(user1Listing),
+					);
+					expect(listings.at(2)).toStrictEqual(
 						exceptedListingResponse(user2Listing),
 					);
 				});
@@ -254,8 +307,11 @@ describe('ToyListing Controller', () => {
 				.expect((res) => {
 					const listings: ToyListing[] = res.body.items;
 
-					expect(listings.length).toBe(1);
+					expect(listings.length).toBe(2);
 					expect(listings[0]).toStrictEqual(
+						exceptedListingResponse(user1Listing2),
+					);
+					expect(listings[1]).toStrictEqual(
 						exceptedListingResponse(user1Listing),
 					);
 				});
@@ -273,6 +329,54 @@ describe('ToyListing Controller', () => {
 						exceptedListingResponse(user2Listing),
 					);
 				});
+		});
+		it('Should Get Liked Listings', () => {
+			return request(app.getHttpServer())
+				.get(`/listings?liked=true`)
+				.set({ Authorization: `Bearer ${user1Token}` })
+				.expect(HttpStatus.OK)
+				.expect((res) => {
+					const listings: ToyListing[] = res.body.items;
+
+					expect(listings.length).toBe(1);
+					expect(listings[0]).toStrictEqual(
+						exceptedListingResponse(user2Listing),
+					);
+				});
+		});
+		it('Should Get Disliked Listings', () => {
+			return request(app.getHttpServer())
+				.get(`/listings?liked=false`)
+				.set({ Authorization: `Bearer ${user2Token}` })
+				.expect(HttpStatus.OK)
+				.expect((res) => {
+					const listings: ToyListing[] = res.body.items;
+
+					expect(listings.length).toBe(1);
+					expect(listings[0]).toStrictEqual(
+						exceptedListingResponse(user1Listing),
+					);
+				});
+		});
+		it('Should Get "New" Listings', () => {
+			return request(app.getHttpServer())
+				.get(`/listings?new`)
+				.set({ Authorization: `Bearer ${user2Token}` })
+				.expect(HttpStatus.OK)
+				.expect((res) => {
+					const listings: ToyListing[] = res.body.items;
+
+					expect(listings.length).toBe(1);
+					expect(listings[0]).toStrictEqual(
+						exceptedListingResponse(user1Listing2),
+					);
+				});
+		});
+		it('Should Fail ("new" + "liked")', () => {
+			return request(app.getHttpServer())
+				.get(`/listings?new&liked`)
+				.set({ Authorization: `Bearer ${user2Token}` })
+				.expect(HttpStatus.BAD_REQUEST);
 		});
 		it('Should Fail (Unauthentified)', () => {
 			return request(app.getHttpServer())
