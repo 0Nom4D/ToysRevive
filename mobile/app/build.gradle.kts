@@ -95,6 +95,7 @@ dependencies {
     implementation("io.coil-kt:coil-compose:2.5.0")
     implementation("androidx.compose.foundation:foundation:1.5.4")
     implementation("io.konform:konform:0.4.0")
+    implementation(kotlin("reflect"))
 
     // Retrofit Dependencies
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
