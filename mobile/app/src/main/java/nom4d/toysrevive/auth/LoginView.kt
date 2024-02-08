@@ -3,6 +3,7 @@ package nom4d.toysrevive.auth
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
@@ -14,6 +15,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -25,18 +27,18 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import io.konform.validation.Validation
-import io.konform.validation.jsonschema.minLength
 import nom4d.toysrevive.api.dtos.LoginDto
+import nom4d.toysrevive.navigation.NavigationItem
 import nom4d.toysrevive.validators.Validators
 
 @Composable
 fun LoginView(
     navHostController: NavHostController,
-    viewModel: LoginViewModel = hiltViewModel(),
-    modifier: Modifier
+    modifier: Modifier = Modifier,
+    viewModel: LoginViewModel = hiltViewModel()
 ) {
     var username by remember { mutableStateOf("") }
     var isUsernameInvalid by remember { mutableStateOf(false) }
@@ -50,22 +52,11 @@ fun LoginView(
     var usernameError by remember { mutableStateOf("") }
     var passwordError by remember { mutableStateOf("") }
 
-    // Validator
-    val formValidator = Validation {
-        LoginDto::username {
-            minLength(6)
-        }
-        LoginDto::password {
-            minLength(7)
-        }
-    }
-
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
             .fillMaxSize()
-            .border(5.dp, Color.Red)
     ) {
         OutlinedTextField(
             value = username,
@@ -123,6 +114,18 @@ fun LoginView(
             },
             modifier = Modifier.fillMaxWidth(.9f)
         )
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.End,
+            modifier = Modifier.fillMaxWidth(.9f).border(5.dp, Color.Red)
+        ) {
+            Text("Pas encore de compte? ", fontSize = 12.sp)
+            TextButton(onClick = {
+                navHostController.navigate(NavigationItem.RegisterScreen.routeName)
+            }) {
+                Text("Se créer un compte", fontSize = 12.sp)
+            }
+        }
         Button(onClick = {
             val loginDto = LoginDto(username, password)
             val validator = Validators.validate(loginDto)
