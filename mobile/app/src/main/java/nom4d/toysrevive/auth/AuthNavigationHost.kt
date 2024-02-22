@@ -22,10 +22,10 @@ fun AuthNavigationHost(modifier: Modifier = Modifier) {
         composable(route = NavigationItem.LoginScreen.routeName) {
             LoginView(navHostController, modifier = modifier)
         }
-        composable(route = "register") {
-            // Register View
+        composable(route = NavigationItem.RegisterScreen.routeName) {
+            RegisterView(navHostController = navHostController, modifier = modifier)
         }
-        composable(route = "home") {
+        composable(route = NavigationItem.HomeScreen.routeName) {
             HomeScreen()
         }
     }

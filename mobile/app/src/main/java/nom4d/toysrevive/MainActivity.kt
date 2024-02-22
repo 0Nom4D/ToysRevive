@@ -25,7 +25,7 @@ class MainActivity : AppCompatActivity() {
         setContent {
             ToysReviveTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) {
-                    AuthNavigationHost(modifier = Modifier.padding(it))
+                    AuthNavigationHost(modifier = Modifier.fillMaxSize().padding(it))
                 }
             }
         }
