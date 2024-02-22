@@ -1,7 +1,6 @@
 package nom4d.toysrevive.auth.steps
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -27,27 +26,21 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import nom4d.toysrevive.api.dtos.RegisterDto
 import nom4d.toysrevive.validators.Validators
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun IdsStep(dto: RegisterDto, pagerState: PagerState, modifier: Modifier = Modifier) {
-    // Email
-    var email by remember { mutableStateOf("") }
-    var isEmailInvalid by remember { mutableStateOf(false) }
-
-    // Username
-    var username by remember { mutableStateOf("") }
-    var isUsernameInvalid by remember { mutableStateOf(false) }
-
-    // Errors
-    var emailError by remember { mutableStateOf("") }
-    var usernameError by remember { mutableStateOf("") }
+fun PhoneStep(
+    dto: RegisterDto,
+    pagerState: PagerState,
+    modifier: Modifier = Modifier
+) {
+    var phone by remember { mutableStateOf("") }
+    var phoneError by remember { mutableStateOf("") }
+    var isPhoneInvalid by remember { mutableStateOf(false) }
 
     val coroutineScope = rememberCoroutineScope()
 
@@ -66,42 +59,21 @@ fun IdsStep(dto: RegisterDto, pagerState: PagerState, modifier: Modifier = Modif
                     .fillMaxHeight()
             ) {
                 OutlinedTextField(
-                    value = email,
+                    value = phone,
                     onValueChange = {
-                        email = it
+                        phone = it
                     },
                     placeholder = {
-                        Text("Adresse mail")
+                        Text("Numéro de téléphone")
                     },
                     singleLine = true,
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
-                    isError = isEmailInvalid,
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
+                    isError = isPhoneInvalid,
                     supportingText = {
-                        if (isEmailInvalid) {
+                        if (isPhoneInvalid) {
                             Text(
                                 modifier = Modifier.fillMaxWidth(),
-                                text = emailError,
-                                color = MaterialTheme.colorScheme.error
-                            )
-                        }
-                    },
-                    modifier = Modifier.fillMaxWidth(.9f)
-                )
-                OutlinedTextField(
-                    value = username,
-                    onValueChange = {
-                        username = it
-                    },
-                    placeholder = {
-                        Text("Nom d'utilisateur")
-                    },
-                    singleLine = true,
-                    isError = isUsernameInvalid,
-                    supportingText = {
-                        if (isUsernameInvalid) {
-                            Text(
-                                modifier = Modifier.fillMaxWidth(),
-                                text = usernameError,
+                                text = phoneError,
                                 color = MaterialTheme.colorScheme.error
                             )
                         }
@@ -118,47 +90,30 @@ fun IdsStep(dto: RegisterDto, pagerState: PagerState, modifier: Modifier = Modif
                             coroutineScope.launch {
                                 pagerState.animateScrollToPage(pagerState.currentPage - 1)
                             }
-                        },
-                        modifier = Modifier.border(5.dp, Color.Green)
+                        }
                     ) {
                         Icon(Icons.Default.ArrowBack, contentDescription = "Précédent")
                         Text("Précédent")
                     }
                     TextButton(
                         onClick = {
-                            isEmailInvalid = false
-                            isUsernameInvalid = false
-                            dto.email = email
-                            dto.userName = username
+                            isPhoneInvalid = false
+                            dto.phone = phone
                             val validator = Validators.validate(dto)
 
-                            for (prop in listOf(RegisterDto::email, RegisterDto::userName)) {
-                                val error = validator.second[prop]
-
-                                if (error.isNullOrEmpty()) {
-                                    continue
-                                }
-                                when (prop) {
-                                    RegisterDto::userName -> {
-                                        usernameError = "Username " +
-                                            "${error.firstOrNull() ?: "contains an unknown error"}."
-                                        isUsernameInvalid = true
-                                    }
-                                    RegisterDto::email -> {
-                                        emailError = "Email " +
-                                            "${error.firstOrNull() ?: "contains an unknown error"}."
-                                        isEmailInvalid = true
-                                    }
-                                }
+                            val errorList = validator.second[RegisterDto::phone]
+                            if (!errorList.isNullOrEmpty()) {
+                                phoneError = "Phone " +
+                                        "${errorList.firstOrNull() ?: "contains an unknown error"}."
+                                isPhoneInvalid = true
                             }
-                            if (isUsernameInvalid || isEmailInvalid) {
+                            if (isPhoneInvalid) {
                                 return@TextButton
                             }
                             coroutineScope.launch {
                                 pagerState.animateScrollToPage(pagerState.currentPage + 1)
                             }
-                        },
-                        modifier = Modifier.border(5.dp, Color.Blue)
+                        }
                     ) {
                         Text("Suivant")
                         Icon(Icons.Default.ArrowForward, contentDescription = "Suivant")
