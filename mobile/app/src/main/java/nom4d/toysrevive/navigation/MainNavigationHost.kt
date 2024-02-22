@@ -19,7 +19,7 @@ import nom4d.toysrevive.swipe.SwipeableImageCard
 @OptIn(ExperimentalMaterial3Api::class)
 @RequiresApi(Build.VERSION_CODES.R)
 @Composable
-fun NavigationHost(
+fun MainNavigationHost(
     scaffoldState: SnackbarHostState,
     navHostController: NavHostController,
     settingsModalState: SheetState,
