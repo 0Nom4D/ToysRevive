@@ -33,11 +33,7 @@ import nom4d.toysrevive.validators.Validators
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun PhoneStep(
-    dto: RegisterDto,
-    pagerState: PagerState,
-    modifier: Modifier = Modifier
-) {
+fun PhoneStep(dto: RegisterDto, pagerState: PagerState, modifier: Modifier = Modifier) {
     var phone by remember { mutableStateOf("") }
     var phoneError by remember { mutableStateOf("") }
     var isPhoneInvalid by remember { mutableStateOf(false) }
@@ -104,7 +100,7 @@ fun PhoneStep(
                             val errorList = validator.second[RegisterDto::phone]
                             if (!errorList.isNullOrEmpty()) {
                                 phoneError = "Phone " +
-                                        "${errorList.firstOrNull() ?: "contains an unknown error"}."
+                                    "${errorList.firstOrNull() ?: "contains an unknown error"}."
                                 isPhoneInvalid = true
                             }
                             if (isPhoneInvalid) {

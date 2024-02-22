@@ -68,15 +68,11 @@ fun PasswordStep(
             Column(
                 verticalArrangement = Arrangement.SpaceEvenly,
                 horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier
-                    .align(Alignment.Center)
-                    .fillMaxHeight()
+                modifier = Modifier.align(Alignment.Center).fillMaxHeight()
             ) {
                 OutlinedTextField(
                     value = password,
-                    onValueChange = {
-                        password = it
-                    },
+                    onValueChange = { password = it },
                     trailingIcon = {
                         IconButton(onClick = { passwordVisibility = !passwordVisibility }) {
                             if (!passwordVisibility) {
@@ -96,9 +92,7 @@ fun PasswordStep(
                 )
                 OutlinedTextField(
                     value = confirmPassword,
-                    onValueChange = {
-                        confirmPassword = it
-                    },
+                    onValueChange = { confirmPassword = it },
                     trailingIcon = {
                         IconButton(onClick = {
                             confirmPasswordVisibility = !confirmPasswordVisibility
