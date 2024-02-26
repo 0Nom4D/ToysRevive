@@ -1,5 +1,4 @@
 FROM node:18-alpine AS base
-RUN apk update && apk add openssl1.1-compat
 
 FROM base AS builder
 WORKDIR /app
@@ -10,8 +9,7 @@ COPY ./*.lock ./
 COPY ./src ./src
 COPY ./prisma/ ./prisma
 RUN yarn install --frozen-lockfile
-RUN yarn run build	\
-	&& yarn install --production --frozen-lockfile
+RUN yarn run prisma generate && yarn run build
 
 FROM base as runner
 WORKDIR /app
@@ -20,5 +18,5 @@ COPY --from=builder /app/package.json /app/yarn.lock ./
 COPY --from=builder /app/prisma ./prisma
 COPY --from=builder /app/dist ./dist
 
-CMD yarn run prisma migrate dev --skip-generate
+CMD yarn run prisma migrate dev --skip-generate \
 	&& yarn run start:prod
