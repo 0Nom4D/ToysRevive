@@ -34,11 +34,18 @@ interface ToysReviveApi {
         @Query("take") take: Int? = null,
         @Query("postCode") postCode: String? = null,
         @Query("condition") condition: String? = null,
-        @Query("type") type: String? = null
+        @Query("type") type: String? = null,
+        @Query("liked") liked: Boolean? = null
     ): ManyResults<Listing>
 
     @POST("/listings")
     suspend fun postListing(@Body listingDto: CreateListingDto): Listing
+
+    @PUT("/listings/{id}/like")
+    suspend fun likeListing(@Path("id") id: Int)
+
+    @PUT("/listings/{id}/dislike")
+    suspend fun dislikeListing(@Path("id") id: Int)
 
     @PUT("/listings/{id}")
     suspend fun updateListing(

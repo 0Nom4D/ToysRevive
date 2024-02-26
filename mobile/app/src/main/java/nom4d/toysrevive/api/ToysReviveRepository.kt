@@ -73,6 +73,28 @@ class ToysReviveRepository @Inject constructor(
         return Response.Success(response)
     }
 
+    suspend fun likeListing(listingId: Int): Response<Boolean> {
+        val response = try {
+            api.likeListing(listingId)
+        } catch (e: retrofit2.HttpException) {
+            return Response.Error(e.message())
+        } catch (_: Exception) {
+            return Response.Error(unknownErrorMessage)
+        }
+        return Response.Success(true)
+    }
+
+    suspend fun dislikeListing(listingId: Int): Response<Boolean> {
+        val response = try {
+            api.dislikeListing(listingId)
+        } catch (e: retrofit2.HttpException) {
+            return Response.Error(e.message())
+        } catch (_: Exception) {
+            return Response.Error(unknownErrorMessage)
+        }
+        return Response.Success(true)
+    }
+
     suspend fun updateListing(
         listingId: Int,
         updateListingDto: UpdateListingDto
